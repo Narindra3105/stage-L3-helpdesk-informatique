@@ -1,0 +1,65 @@
+@startuml DiagrammeCasUtilisation
+' ======= STYLE =======
+left to right direction
+skinparam linetype polyline
+skinparam nodesep 60
+skinparam ranksep 100
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowFontSize 11
+skinparam actorStyle awesome
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam usecase {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+  ArrowColor #333333
+}
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #444444
+}
+
+actor "Utilisateur" as U
+actor "Demandeur" as D
+actor "Technicien" as T
+actor "Administrateur" as A
+
+rectangle "Helpdesk Informatique" {
+
+  usecase "S'authentifier" as CU1
+
+  usecase "Demander une assistance\n(créer un ticket)" as CU2
+  usecase "Suivre ses tickets" as CU3
+
+  usecase "Centraliser les tickets" as CU4
+  usecase "Assigner un ticket" as CU5
+  usecase "Traiter et résoudre\nun ticket" as CU6
+
+  usecase "Gérer les utilisateurs\net les équipes" as CU7
+  usecase "Configurer les SLA\net les priorités" as CU8
+}
+
+U <|-- D
+U <|-- T
+U <|-- A
+
+
+U --> CU1
+
+D --> CU2
+D --> CU3
+
+T --> CU4
+T --> CU6
+
+A --> CU7
+A --> CU8
+
+CU5 .> CU4 : <<extend>>
+CU6 .> CU5 : <<include>>
+@enduml

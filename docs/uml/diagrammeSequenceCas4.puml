@@ -1,0 +1,46 @@
+@startuml DSS_CU4_CentraliserTickets
+
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU4 - Centraliser les tickets
+
+actor "Technicien" as T
+participant ":Système Helpdesk" as S
+
+T -> S : consulterTicketsÉquipe()
+S --> T : afficherListeTickets(numéro, sujet, statut, priorité, technicien, échéance, enRetard)
+
+loop tant que le technicien affine sa recherche
+  T -> S : filtrerTickets(statut, priorité, technicien, retard)
+
+  alt des tickets correspondent
+    S --> T : afficherListeFiltrée(tickets triés, ticketsEnRetardMisEnÉvidence)
+  else aucun ticket correspondant
+    S --> T : afficherAucunRésultat()
+  end
+end
+
+opt le technicien veut le détail d'un ticket
+  T -> S : sélectionnerTicket(numéro)
+  S --> T : afficherDétailTicket(informations, commentaires)
+end
+@enduml

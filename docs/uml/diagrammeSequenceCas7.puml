@@ -1,0 +1,69 @@
+@startuml DSS_CU7_GererUtilisateursEquipes
+
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU7 - Gérer les utilisateurs et les équipes
+
+actor "Administrateur" as A
+participant ":Système Helpdesk" as S
+
+A -> S : ouvrirGestionAdministration()
+S --> A : afficherListeUtilisateursEtÉquipes()
+
+loop tant que l'administrateur poursuit la gestion
+
+  alt gérer les utilisateurs
+
+    A -> S : créerUtilisateur(nom, prénom, email, rôle)
+    alt email non utilisé
+      S --> A : confirmerCréation(utilisateur)
+    else email déjà utilisé
+      S --> A : signalerErreur(emailExistant)
+    end
+
+    opt rattacher à une équipe
+      A -> S : affecterÀÉquipe(utilisateur, équipe)
+      S --> A : confirmerAffectation(utilisateur, équipe)
+    end
+
+    opt changer l'état du compte
+      A -> S : changerÉtatCompte(utilisateur, actif)
+      S --> A : confirmerChangement(état)
+    end
+
+  else gérer les équipes
+
+    A -> S : créerÉquipe(nom, description)
+    S --> A : confirmerCréation(équipe)
+
+    opt supprimer une équipe
+      A -> S : supprimerÉquipe(équipe)
+      alt aucun ticket rattaché
+        S --> A : confirmerSuppression(équipe)
+      else tickets rattachés
+        S --> A : refuserSuppression(ticketsRattachés)
+      end
+    end
+
+  end
+end
+@enduml

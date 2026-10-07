@@ -1,0 +1,41 @@
+@startuml DSS_CU2_DemanderAssistance
+' ======= STYLE =======
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU2 - Demander une assistance
+
+actor "Demandeur" as D
+participant ":Système Helpdesk" as S
+
+D -> S : demanderCréationTicket()
+S --> D : afficherFormulaire(prioritésDisponibles)
+
+loop tant que les données sont invalides
+  D -> S : soumettreTicket(sujet, description, priorité)
+
+  alt données valides
+    S --> D : confirmerCréation(numéro, statut, échéanceRéponse)
+  else sujet ou description vide
+    S --> D : signalerErreur(champsObligatoires)
+  end
+end
+@enduml

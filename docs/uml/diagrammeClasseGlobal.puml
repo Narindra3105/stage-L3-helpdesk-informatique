@@ -1,0 +1,142 @@
+@startuml DiagrammeClassesGlobal
+
+skinparam linetype ortho
+skinparam nodesep 220
+skinparam ranksep 150
+skinparam dpi 200
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam roundcorner 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowFontSize 11
+skinparam class {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+  ArrowColor #333333
+}
+hide circle
+hide empty members
+
+enum Role {
+  DEMANDEUR
+  TECHNICIEN
+  ADMIN
+}
+enum TypeCommentaire {
+  PUBLIC
+  INTERNE
+}
+enum StatutArticle {
+  BROUILLON
+  PUBLIE
+  ARCHIVE
+}
+
+class Equipe {
+  -nom : String
+  -description : String
+  -dateCreation : Date
+  +ajouterMembre(u : Utilisateur)
+  +retirerMembre(u : Utilisateur)
+  +listerMembres() : List<Utilisateur>
+}
+
+class Priorite {
+  -nom : String
+  -niveauOrdre : int
+  -couleur : String
+}
+
+class Statut {
+  -nom : String
+  -ordre : int
+  -estFinal : boolean
+}
+
+class Sla {
+  -nom : String
+  -delaiPremiereReponseMin : int
+  -delaiResolutionMin : int
+  +calculerEcheance(dateCreation : Date) : Date
+  +estDepasse(t : Ticket) : boolean
+}
+
+class Utilisateur {
+  -nom : String
+  -prenom : String
+  -email : String
+  -mdp : String
+  -role : Role
+  -actif : boolean
+  -derniereActivite : Date
+  -dateCreation : Date
+  +authentifier(email : String, mdp : String) : boolean
+  +changerMotDePasse(ancien : String, nouveau : String)
+  +activer()
+  +desactiver()
+}
+
+class Ticket {
+  -numero : String
+  -sujet : String
+  -description : String
+  -dateCreation : Date
+  -dateLimiteReponse : Date
+  -datePremiereReponse : Date
+  -dateResolution : Date
+  -reouvert : boolean
+  -nbReouvertures : int
+  +assigner(technicien : Utilisateur)
+  +changerStatut(statut : Statut)
+  +changerPriorite(priorite : Priorite)
+  +ajouterCommentaire(c : Commentaire)
+  +cloturer()
+  +rouvrir()
+  +estEnRetard() : boolean
+}
+
+class Commentaire {
+  -contenu : String
+  -type : TypeCommentaire
+  -dateCreation : Date
+}
+
+class Categorie {
+  -nom : String
+  -description : String
+  +listerArticles() : List<Article>
+}
+
+class Article {
+  -titre : String
+  -contenu : String
+  -statut : StatutArticle
+  -nbVues : int
+  -tauxUtile : float
+  -dateCreation : Date
+  -dateMaj : Date
+  +rechercher(motCle : String) : List<Article>
+}
+
+Priorite "1" -right- "0..*" Sla : définit
+Equipe "0..1" -left- "0..*" Sla : spécifie
+
+Statut "1" -right- "0..*" Ticket : qualifie
+Utilisateur "1" -left- "0..*" Ticket : crée
+Utilisateur "0..1" -left- "0..*" Ticket : assigné
+Utilisateur "1" -right- "0..*" Article : écrit
+
+Sla "0..1" -down- "0..*" Ticket : s'applique à
+Priorite "1" -down- "0..*" Ticket : qualifie
+Equipe "1" -down- "0..*" Ticket : gère
+Equipe "0..1" -down- "0..*" Utilisateur : compose
+Categorie "1" -down- "0..*" Article : classe
+
+Commentaire "0..*" -up- "1" Ticket : reçoit
+Utilisateur "1" -down- "0..*" Commentaire : rédige
+
+Utilisateur .down.> Role
+Commentaire .down.> TypeCommentaire
+Article .down.> StatutArticle
+@enduml

@@ -1,0 +1,54 @@
+@startuml DSS_CU6_TraiterResoudreTicket
+
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU6 - Traiter et résoudre un ticket
+
+actor "Technicien" as T
+participant ":Système Helpdesk" as S
+
+T -> S : ouvrirTicket(ticket)
+S --> T : afficherDétailTicket(informations, commentaires, échéances)
+
+T -> S : changerStatut(ticket, "En cours")
+S --> T : confirmerChangement(statut)
+
+loop tant que le problème n'est pas réglé
+  alt ajouter un échange
+    T -> S : ajouterCommentaire(ticket, contenu, type)
+    S --> T : confirmerAjout(commentaire)
+  else ajuster la priorité
+    T -> S : changerPriorité(ticket, priorité)
+    S --> T : confirmerChangement(priorité, nouvellesÉchéances)
+  end
+end
+
+T -> S : résoudreTicket(ticket)
+S --> T : confirmerRésolution(statut, dateRésolution)
+
+T -> S : clôturerTicket(ticket)
+alt ticket résolu
+  S --> T : confirmerClôture(statut)
+else ticket non résolu
+  S --> T : refuserClôture(ticketNonRésolu)
+end
+@enduml

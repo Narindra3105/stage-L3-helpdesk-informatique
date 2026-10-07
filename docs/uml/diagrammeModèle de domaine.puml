@@ -1,0 +1,106 @@
+@startuml ModeleDomaine
+' ======= STYLE =======
+skinparam linetype ortho
+skinparam nodesep 220
+skinparam ranksep 150
+skinparam dpi 200
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam roundcorner 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowFontSize 11
+skinparam class {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+  ArrowColor #333333
+}
+hide circle
+hide empty members
+hide methods
+
+class Equipe {
+  nom
+  description
+  dateCreation
+}
+
+class Priorite {
+  nom
+  niveauOrdre
+  couleur
+}
+
+class Statut {
+  nom
+  ordre
+  estFinal
+}
+
+class Sla {
+  nom
+  delaiPremiereReponse
+  delaiResolution
+}
+
+class Utilisateur {
+  nom
+  prenom
+  email
+  motDePasse
+  role
+  actif
+  derniereActivite
+  dateCreation
+}
+
+class Ticket {
+  numero
+  sujet
+  description
+  dateCreation
+  dateLimiteReponse
+  datePremiereReponse
+  dateResolution
+  reouvert
+  nbReouvertures
+}
+
+class Commentaire {
+  contenu
+  type
+  dateCreation
+}
+
+class Categorie {
+  nom
+  description
+}
+
+class Article {
+  titre
+  contenu
+  statut
+  nbVues
+  tauxUtile
+  dateCreation
+  dateMaj
+}
+
+Priorite "1" -right- "0..*" Sla : définit
+Equipe "0..1" -left- "0..*" Sla : spécifie
+
+Statut "1" -right- "0..*" Ticket : qualifie
+Utilisateur "1" -left- "0..*" Ticket : crée (demandeur)
+Utilisateur "0..1" -left- "0..*" Ticket : assigné (technicien)
+Utilisateur "1" -right- "0..*" Article : écrit
+
+Sla "0..1" -down- "0..*" Ticket : s'applique à
+Priorite "1" -down- "0..*" Ticket : qualifie
+Equipe "1" -down- "0..*" Ticket : gère
+Equipe "0..1" -down- "0..*" Utilisateur : compose
+Categorie "1" -down- "0..*" Article : classe
+
+Commentaire "0..*" -up- "1" Ticket : reçoit
+Utilisateur "1" -down- "0..*" Commentaire : rédige
+@enduml

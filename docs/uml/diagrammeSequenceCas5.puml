@@ -1,0 +1,39 @@
+@startuml DSS_CU5_AssignerTicket
+
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU5 - Assigner un ticket
+
+actor "Technicien" as T
+participant ":Système Helpdesk" as S
+
+T -> S : demanderAssignation(ticket)
+S --> T : afficherTechniciensDisponibles(techniciensActifsÉquipe)
+
+T -> S : choisirTechnicien(ticket, technicien)
+
+alt ticket non clos
+  S --> T : confirmerAssignation(ticket, technicien, statut)
+else ticket clos
+  S --> T : refuserAssignation(ticketClos)
+end
+@enduml

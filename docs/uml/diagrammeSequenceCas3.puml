@@ -1,0 +1,48 @@
+@startuml DSS_CU3_SuivreTickets
+' ======= STYLE =======
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU3 - Suivre ses tickets
+
+actor "Demandeur" as D
+participant ":Système Helpdesk" as S
+
+D -> S : consulterMesTickets()
+S --> D : afficherListeTickets(numéro, sujet, statut, priorité, échéance)
+
+D -> S : sélectionnerTicket(numéro)
+S --> D : afficherDétailTicket(informations, commentairesPublics)
+
+opt le demandeur veut échanger
+  alt ticket non clos
+    D -> S : ajouterCommentaire(ticket, contenu)
+    S --> D : confirmerAjout(commentaire)
+  else ticket clos
+    S --> D : refuserCommentaire(ticketClos)
+  end
+end
+
+opt le problème persiste (ticket résolu ou clos)
+  D -> S : rouvrirTicket(ticket)
+  S --> D : confirmerRéouverture(nouveauStatut, nouvelleÉchéance)
+end
+@enduml

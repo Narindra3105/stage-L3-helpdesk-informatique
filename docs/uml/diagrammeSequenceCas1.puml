@@ -1,0 +1,44 @@
+@startuml DSS_CU1_Authentifier
+' ======= STYLE =======
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU1 - S'authentifier
+
+actor "Utilisateur" as U
+participant ":Système Helpdesk" as S
+
+U -> S : demanderConnexion()
+S --> U : afficherFormulaireConnexion()
+
+loop tant que l'accès n'est pas accordé
+  U -> S : soumettreIdentifiants(email, motDePasse)
+
+  alt identifiants valides et compte actif
+    S --> U : confirmerConnexion(rôle)
+    S --> U : afficherInterface(rôle)
+  else identifiants incorrects
+    S --> U : signalerErreur(identifiantsInvalides)
+  else compte désactivé
+    S --> U : refuserAccès(compteDésactivé)
+  end
+end
+@enduml

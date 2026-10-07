@@ -1,0 +1,57 @@
+@startuml DSS_CU8_ConfigurerSlaPriorites
+
+skinparam dpi 200
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam actor {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam participant {
+  BackgroundColor #8dc6fcec
+  BorderColor #444444
+}
+skinparam sequence {
+  ArrowColor #333333
+  LifeLineBorderColor #444444
+  GroupBackgroundColor #FFFFFF
+}
+hide footbox
+
+title DSS : CU8 - Configurer les SLA et les priorités
+
+actor "Administrateur" as A
+participant ":Système Helpdesk" as S
+
+A -> S : ouvrirConfigurationSla()
+S --> A : afficherPrioritésEtSla()
+
+opt gérer les priorités
+  A -> S : enregistrerPriorité(nom, niveauOrdre, couleur)
+  S --> A : confirmerEnregistrement(priorité)
+
+  opt supprimer une priorité
+    A -> S : supprimerPriorité(priorité)
+    alt priorité non utilisée
+      S --> A : confirmerSuppression(priorité)
+    else priorité utilisée par des tickets ou des SLA
+      S --> A : refuserSuppression(prioritéUtilisée)
+    end
+  end
+end
+
+opt définir un SLA
+  A -> S : définirSla(priorité, équipe, délaiPremièreRéponse, délaiRésolution)
+
+  alt aucun SLA pour ce couple (priorité, équipe)
+    S --> A : confirmerCréation(sla)
+  else SLA déjà existant pour ce couple
+    S --> A : proposerModification(slaExistant)
+    A -> S : confirmerModification(sla, nouveauxDélais)
+    S --> A : confirmerEnregistrement(sla)
+  end
+end
+@enduml
