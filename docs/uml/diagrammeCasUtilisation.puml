@@ -1,5 +1,5 @@
 @startuml DiagrammeCasUtilisation
-' ======= STYLE =======
+
 left to right direction
 skinparam linetype polyline
 skinparam nodesep 60

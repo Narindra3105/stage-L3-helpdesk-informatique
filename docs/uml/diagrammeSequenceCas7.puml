@@ -1,4 +1,4 @@
-@startuml DSS_CU7_GererUtilisateursEquipes
+@startuml CasUtilisation_GererUtilisateursEquipes
 
 skinparam dpi 200
 skinparam shadowing false

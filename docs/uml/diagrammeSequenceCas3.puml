@@ -1,5 +1,5 @@
-@startuml DSS_CU3_SuivreTickets
-' ======= STYLE =======
+@startuml CasUtilisation_SuivreTickets
+
 skinparam dpi 200
 skinparam shadowing false
 skinparam defaultFontName Arial

@@ -1,5 +1,5 @@
 @startuml ModeleDomaine
-' ======= STYLE =======
+
 skinparam linetype ortho
 skinparam nodesep 220
 skinparam ranksep 150

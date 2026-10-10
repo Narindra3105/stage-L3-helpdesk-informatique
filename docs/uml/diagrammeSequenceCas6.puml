@@ -1,4 +1,4 @@
-@startuml DSS_CU6_TraiterResoudreTicket
+@startuml CasUtilisation_TraiterResoudreTicket
 
 skinparam dpi 200
 skinparam shadowing false

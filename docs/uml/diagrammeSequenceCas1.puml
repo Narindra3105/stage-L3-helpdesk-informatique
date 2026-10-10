@@ -1,5 +1,5 @@
-@startuml DSS_CU1_Authentifier
-' ======= STYLE =======
+@startuml CasUtilisation_Authentifier
+
 skinparam dpi 200
 skinparam shadowing false
 skinparam defaultFontName Arial
