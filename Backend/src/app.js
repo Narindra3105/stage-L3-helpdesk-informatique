@@ -16,6 +16,7 @@ app.use('/api/tickets',require('./routes/ticket.routes'));
 app.use('/api/equipes',require('./routes/equipe.routes'));
 app.use('/api/statuts',require('./routes/statut.routes'));
 app.use('/api/priorites',require('./routes/priorite.routes'));
+app.use('/api/categories',require('./routes/categorie.routes'));
 
 app.use(notFound);
 app.use(errorHandler);

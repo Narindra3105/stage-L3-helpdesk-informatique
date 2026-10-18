@@ -1,4 +1,4 @@
-const {body,params}=require('express-validator');
+const {body,param}=require('express-validator');
 
 const idRule = [
     param('id')
