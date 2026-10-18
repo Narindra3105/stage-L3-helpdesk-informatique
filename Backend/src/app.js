@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/tickets',require('./routes/ticket.routes'));
 app.use('/api/equipes',require('./routes/equipe.routes'));
+app.use('/api/statut',require('./routes/statut.routes'));
 
 app.use(notFound);
 app.use(errorHandler);
