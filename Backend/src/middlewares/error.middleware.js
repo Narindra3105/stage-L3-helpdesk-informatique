@@ -8,7 +8,7 @@ const errorHandler = (err,req,res,next) =>{
     let statusCode = err.statusCode || 500;
     let message = err.message || "Erreur interne du serveur";
 
-    if (err.type === 'entinty.parse.failed'){
+    if (err.type === 'entity.parse.failed'){
         statusCode = 400;
         message = 'JSON invalide dans le corps de la requête';
     }
@@ -20,7 +20,7 @@ const errorHandler = (err,req,res,next) =>{
 
     if(err.code ==='ER_NO_REFERENCED_ROW_2'){
         statusCode = 400;
-        message = "Réference invalide : l'élément lié n'existe pas";
+        message = "Référence invalide : l'élément lié n'existe pas";
     }
 
     if(err.code === 'ER_ROW_IS_REFERENCED_2'){
