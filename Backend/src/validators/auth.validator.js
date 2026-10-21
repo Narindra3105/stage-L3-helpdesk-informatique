@@ -18,12 +18,8 @@ const registerRules = [
     
     body('mdp')
         .notEmpty().withMessage('Le mot de passe est obligatoire').bail()
-        .isLength({min:8}).withMessage('Le mot de passe doit contenir au moins 8 caractères'),
+        .isLength({min:8,max:72}).withMessage('Le mot de passe doit contenir au moins 8 et 72 caractères'),
 
-    body('role')
-        .optional()
-        .isIn(['admin','technicien','demandeur'])
-        .withMessage('Rôle invalide (admin,technicien ou demandeur)'),
 ];
 
 const loginRules = [
