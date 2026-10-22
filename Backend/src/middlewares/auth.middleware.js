@@ -16,6 +16,7 @@ const authMiddleware = (req, res, next) => {
 
     next();
   } catch (err) {
+    console.log('Erreur JWT:', err.message);
     return res.status(401).json({ message: 'Token invalide ou expiré' });
   }
 };

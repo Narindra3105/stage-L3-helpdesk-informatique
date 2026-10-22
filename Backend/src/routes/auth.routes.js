@@ -11,5 +11,4 @@ router.post('/login', loginRules,validate,authController.login);
 router.get('/me', authMiddleware, (req, res) => {
   res.status(200).json({ message: 'Accès autorisé', user: req.user });
 });
-
 module.exports = router;

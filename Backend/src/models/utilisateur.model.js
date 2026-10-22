@@ -12,12 +12,15 @@ const findById = async (id)=>{
     return rows[0];
 };
 
-const create = async ({nom, prenom, email, mdp, role ='demadeur'})=>{
+const create = async ({nom, prenom, email, mdp, role ='demandeur'})=>{
     const [result] = await pool.query(
         'INSERT INTO utilisateur (nom, prenom,email,mdp,role) VALUES (?,?,?,?,?)',
         [nom, prenom,email,mdp,role]
     );
     return findById(result.insertId);
 };
+const updateDerniereActivite = async (id) => {
+  await pool.query('UPDATE utilisateur SET derniere_activite = NOW() WHERE id = ?', [id]);
+};
 
-module.exports = {findByEmail,findById,create};
+module.exports = {findByEmail,findById,create,updateDerniereActivite};
