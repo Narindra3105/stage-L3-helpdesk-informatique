@@ -46,6 +46,6 @@ exports.remove = async (req, res) => {
         await categorieModel.remove(req.params.id);
         res.status(204).send();
     } catch (err) {
-        handleDbError(err, { referenced: 'Cette categorie est utilisée par des tickets ou des articles' });
+        handleDbError(err, { referenced: 'Cette catégorie est utilisée par des articles' });
     }
 };

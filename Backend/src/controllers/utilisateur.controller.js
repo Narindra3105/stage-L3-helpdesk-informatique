@@ -5,7 +5,7 @@ const handleDbError = require('../utils/handleDbError');
 
 const MESSAGES_DB = {
   duplicate: 'Cet email est déjà utilisé',
-  referenced: 'Cet utilisateur est lié à des tickets ou à des commentaires',
+  referenced: 'Cet utilisateur est lié à des tickets, commentaires ou articles',
   missing: { fk_utilisateur_equipe: "L'équipe indiquée n'existe pas" },
 };
 
