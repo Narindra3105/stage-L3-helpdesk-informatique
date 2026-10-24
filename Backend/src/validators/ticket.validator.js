@@ -28,10 +28,18 @@ const champsReferences = [
         .isInt({min:1}).withMessage("L'identifiant de la priorité doit être un entier positif")
         .toInt(),
 ];
-
+const assignationRules = [
+    body('technicien_id').custom((value) => {
+        if (value === null) return true;
+        if (Number.isInteger(value) && value >= 1) return true;
+        throw new Error(
+            'technicien_id doit être un entier positif, ou null pour retirer le technicien'
+        );
+    }),
+];
 const creerTicketRules = [...champsTexte, ...champsReferences];
 
 const modifierTicketRules = champsTexte;
 
-module.exports = {idRule, creerTicketRules, modifierTicketRules};
+module.exports = {idRule, creerTicketRules, modifierTicketRules,assignationRules};
 

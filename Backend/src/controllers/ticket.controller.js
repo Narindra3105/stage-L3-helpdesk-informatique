@@ -1,6 +1,7 @@
 const ticketModel = require('../models/ticket.model');
 const AppError = require('../utils/AppError');
 const handleDbError = require('../utils/handleDbError');
+const utilisateurModel = require('../models/utilisateur.model');
 
 const MESSAGES_DB = {
     referenced: 'Ce ticket est lié à des commentaires',
@@ -59,6 +60,38 @@ exports.update = async (req, res) => {
     });
 
     res.json(ticket);
+};
+exports.assigner = async (req, res) => {
+    const ticket = await ticketModel.findById(req.params.id);
+    if (!ticket) {
+        throw new AppError('Ticket introuvable', 404);
+    }
+
+    if (ticket.est_final) {
+        throw new AppError("Impossible d'assigner un ticket clos", 409);
+    }
+
+    const { technicien_id } = req.body;
+
+    if (technicien_id !== null) {
+        const technicien = await utilisateurModel.findById(technicien_id);
+
+        if (!technicien) {
+            throw new AppError("Cet utilisateur n'existe pas", 400);
+        }
+        if (technicien.role !== 'technicien') {
+            throw new AppError("Cet utilisateur n'est pas un technicien", 400);
+        }
+        if (technicien.statut !== 'actif') {
+            throw new AppError(
+                `Ce technicien n'est pas disponible (statut : ${technicien.statut})`,
+                400
+            );
+        }
+    }
+
+    const ticketMaj = await ticketModel.assigner(ticket.id, technicien_id);
+    res.json(ticketMaj);
 };
 
 exports.remove = async (req, res) =>{

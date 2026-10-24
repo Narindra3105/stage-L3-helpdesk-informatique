@@ -7,6 +7,7 @@ const {
   idRule,
   creerTicketRules,
   modifierTicketRules,
+  assignationRules,
 } = require('../validators/ticket.validator');
 const ticketController = require('../controllers/ticket.controller');
 
@@ -23,6 +24,14 @@ router.put(
   modifierTicketRules,
   validate,
   ticketController.update
+);
+router.patch(
+  '/:id/assignation',
+  roleMiddleware('admin'),
+  idRule,
+  assignationRules,
+  validate,
+  ticketController.assigner
 );
 router.delete(
   '/:id',

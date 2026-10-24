@@ -110,4 +110,11 @@ const remove = async (id) => {
     await pool.query('DELETE FROM ticket WHERE id = ?', [id]);
 };
 
-module.exports = { findAll, findById, create, update, remove };
+const assigner = async (id, technicienId) => {
+    await pool.query(
+        'UPDATE ticket SET technicien_id = ? WHERE id = ?',
+        [technicienId, id]
+    );
+    return findById(id);
+};
+module.exports = { findAll, findById, create, assigner, update, remove };
