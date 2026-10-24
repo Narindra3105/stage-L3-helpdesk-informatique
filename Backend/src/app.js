@@ -19,6 +19,7 @@ app.use('/api/priorites',require('./routes/priorite.routes'));
 app.use('/api/categories',require('./routes/categorie.routes'));
 app.use('/api/sla',require('./routes/sla.routes'));
 app.use('/api/utilisateurs',require('./routes/utilisateur.routes'));
+app.use('/api/commentaires', require('./routes/commentaire.routes'));
 
 app.use(notFound);
 app.use(errorHandler);

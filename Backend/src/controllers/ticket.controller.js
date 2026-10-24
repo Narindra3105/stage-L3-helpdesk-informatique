@@ -3,7 +3,7 @@ const AppError = require('../utils/AppError');
 const handleDbError = require('../utils/handleDbError');
 
 const MESSAGES_DB = {
-    referenced : 'Ce ticket est lié  à  des commentaires',
+    referenced: 'Ce ticket est lié à des commentaires',
     missing: {
         fk_ticket_equipe:"L'équipe indiquée n'existe pas",
         fk_ticket_priorite:"La priorité indiquée n'existe pas",
