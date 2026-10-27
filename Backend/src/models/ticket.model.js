@@ -117,4 +117,22 @@ const assigner = async (id, technicienId) => {
     );
     return findById(id);
 };
-module.exports = { findAll, findById, create, assigner, update, remove };
+const changerStatut = async (id, statutId, effets = {}) => {
+    const sets = ['statut_id = ?'];
+    const params = [statutId];
+
+    if (effets.resolution) {
+        sets.push('date_resolution = NOW()');
+    }
+    if (effets.reouverture) {
+        sets.push('date_resolution = NULL', 'reouvert = 1', 'nb_reouvertures = nb_reouvertures + 1');
+    }
+    if (effets.premiereReponse) {
+        sets.push('date_premiere_reponse = COALESCE(date_premiere_reponse, NOW())');
+    }
+
+    params.push(id);
+    await pool.query(`UPDATE ticket SET ${sets.join(', ')} WHERE id = ?`, params);
+    return findById(id);
+};
+module.exports = { findAll, findById, create, assigner,changerStatut, update, remove };

@@ -37,9 +37,15 @@ const assignationRules = [
         );
     }),
 ];
+const changementStatutRules = [
+    body('statut_id')
+        .notEmpty().withMessage('Le statut est obligatoire').bail()
+        .isInt({min:1}).withMessage("L'identifiant du statut doit être un entier positif")
+        .toInt(),
+];
 const creerTicketRules = [...champsTexte, ...champsReferences];
 
 const modifierTicketRules = champsTexte;
 
-module.exports = {idRule, creerTicketRules, modifierTicketRules,assignationRules};
+module.exports = {idRule, creerTicketRules, modifierTicketRules,assignationRules,changementStatutRules};
 

@@ -2,6 +2,7 @@ const ticketModel = require('../models/ticket.model');
 const AppError = require('../utils/AppError');
 const handleDbError = require('../utils/handleDbError');
 const utilisateurModel = require('../models/utilisateur.model');
+const statutModel = require('../models/statut.model');
 
 const MESSAGES_DB = {
     referenced: 'Ce ticket est lié à des commentaires',
@@ -91,6 +92,45 @@ exports.assigner = async (req, res) => {
     }
 
     const ticketMaj = await ticketModel.assigner(ticket.id, technicien_id);
+    res.json(ticketMaj);
+};
+exports.changerStatut = async (req, res) => {
+    const ticket = await ticketModel.findById(req.params.id);
+    if (!ticket) {
+        throw new AppError('Ticket introuvable', 404);
+    }
+
+    if (req.user.role === 'technicien' && ticket.technicien_id !== req.user.id) {
+        throw new AppError("Ce ticket ne vous est pas assigné", 403);
+    }
+
+    const { statut_id } = req.body;
+
+    if (statut_id === ticket.statut_id) {
+        throw new AppError('Le ticket a déjà ce statut', 400);
+    }
+
+    const nouveauStatut = await statutModel.findById(statut_id);
+    if (!nouveauStatut) {
+        throw new AppError("Ce statut n'existe pas", 400);
+    }
+
+    const [statutInitial] = await statutModel.findAll();
+    const quitteLeStatutInitial = ticket.statut_id === statutInitial.id;
+
+    if (quitteLeStatutInitial && ticket.technicien_id === null) {
+        throw new AppError('Assignez un technicien avant de faire avancer ce ticket', 400);
+    }
+
+    const estFinalAvant = Boolean(ticket.est_final);
+    const estFinalApres = Boolean(nouveauStatut.est_final);
+
+    const ticketMaj = await ticketModel.changerStatut(ticket.id, nouveauStatut.id, {
+        resolution: !estFinalAvant && estFinalApres,
+        reouverture: estFinalAvant && !estFinalApres,
+        premiereReponse: quitteLeStatutInitial,
+    });
+
     res.json(ticketMaj);
 };
 
