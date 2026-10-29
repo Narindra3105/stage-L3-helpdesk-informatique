@@ -20,7 +20,7 @@ export default function Sidebar() {
   const initialesUtilisateur = user ? initiales(user.prenom, user.nom) : '';
 
   return (
-    <aside className="flex h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-5">
+    <aside className="flex h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-5 print:hidden">
       <div className="flex items-center gap-2 px-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-700">
           <div className="h-4 w-4 rounded-sm border-2 border-white" />

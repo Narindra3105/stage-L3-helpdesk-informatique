@@ -1,5 +1,5 @@
 import axiosClient from './axiosClient';
-import type { DashboardStats, StatTechnicien } from '../types/stats';
+import type { DashboardStats, RapportSla, StatTechnicien } from '../types/stats';
 
 export const getDashboardStats = async (): Promise<DashboardStats> => {
   const { data } = await axiosClient.get<DashboardStats>('/stats/dashboard');
@@ -8,5 +8,10 @@ export const getDashboardStats = async (): Promise<DashboardStats> => {
 
 export const getStatsTechniciens = async (): Promise<StatTechnicien[]> => {
   const { data } = await axiosClient.get<StatTechnicien[]>('/stats/techniciens');
+  return data;
+};
+
+export const getRapportSla = async (): Promise<RapportSla> => {
+  const { data } = await axiosClient.get<RapportSla>('/stats/sla');
   return data;
 };

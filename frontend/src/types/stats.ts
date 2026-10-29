@@ -42,3 +42,32 @@ export interface StatTechnicien {
   tickets_en_cours: number;
   resolus_ce_mois: number;
 }
+export interface ResumeRapportSla {
+  total_tickets: number;
+  retards: number;
+  respect_sla: number | null;
+  temps_moyen_minutes: number | null;
+}
+
+export interface SlaSemaine {
+  semaine: string;
+  avec_sla: number;
+  dans_les_delais: number;
+  respect_sla: number | null;
+}
+
+export interface SlaPriorite {
+  id: number;
+  nom: string;
+  couleur: string | null;
+  tickets: number;
+  avec_sla: number;
+  dans_les_delais: number;
+  respect_sla: number | null;
+}
+
+export interface RapportSla {
+  resume: ResumeRapportSla;
+  par_semaine: SlaSemaine[];
+  par_priorite: SlaPriorite[];
+}
