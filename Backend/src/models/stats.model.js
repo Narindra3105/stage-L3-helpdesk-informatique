@@ -115,4 +115,95 @@ const getTechniciens = async () => {
     resolus_ce_mois: Number(r.resolus_ce_mois),
   }));
 };
-module.exports = { getDashboard, getTechniciens };
+
+const SEMAINES = 6;
+const DEBUT_PERIODE = `DATE_SUB(CURDATE(), INTERVAL ${SEMAINES * 7 - 1} DAY)`;
+
+const DANS_LES_DELAIS = `
+  CASE
+    WHEN s.est_final = 1 AND t.date_resolution IS NOT NULL
+      THEN t.date_resolution <= t.date_limite_resolution
+    ELSE NOW() <= t.date_limite_resolution
+  END
+`;
+
+const pourcentage = (partie, total) => {
+  const sur = Number(total);
+  return sur === 0 ? null : Math.round((Number(partie) / sur) * 100);
+};
+
+const getRapportSla = async () => {
+  const [[resume]] = await pool.query(`
+    SELECT COUNT(*) AS total_tickets,
+           COUNT(t.date_limite_resolution) AS avec_sla,
+           COALESCE(SUM(${DANS_LES_DELAIS}), 0) AS dans_les_delais,
+           AVG(
+             CASE WHEN s.est_final = 1 AND t.date_resolution IS NOT NULL
+                  THEN TIMESTAMPDIFF(MINUTE, t.date_creation, t.date_resolution) END
+           ) AS temps_moyen_minutes
+    FROM ticket t
+    JOIN statut s ON s.id = t.statut_id
+    WHERE t.date_creation >= ${DEBUT_PERIODE}
+  `);
+
+  const [semaines] = await pool.query(`
+    SELECT DATEDIFF(CURDATE(), DATE(t.date_creation)) DIV 7 AS semaine_index,
+           COUNT(t.date_limite_resolution) AS avec_sla,
+           COALESCE(SUM(${DANS_LES_DELAIS}), 0) AS dans_les_delais
+    FROM ticket t
+    JOIN statut s ON s.id = t.statut_id
+    WHERE t.date_creation >= ${DEBUT_PERIODE}
+    GROUP BY semaine_index
+  `);
+
+  const [priorites] = await pool.query(`
+    SELECT p.id, p.nom, p.couleur,
+           COUNT(t.id) AS tickets,
+           COUNT(t.date_limite_resolution) AS avec_sla,
+           COALESCE(SUM(${DANS_LES_DELAIS}), 0) AS dans_les_delais
+    FROM priorite p
+    LEFT JOIN ticket t ON t.priorite_id = p.id AND t.date_creation >= ${DEBUT_PERIODE}
+    LEFT JOIN statut s ON s.id = t.statut_id
+    GROUP BY p.id, p.nom, p.couleur, p.niveau_ordre
+    ORDER BY p.niveau_ordre ASC
+  `);
+
+  const avecSla = Number(resume.avec_sla);
+  const dansLesDelais = Number(resume.dans_les_delais);
+
+  const parIndex = new Map(semaines.map((ligne) => [Number(ligne.semaine_index), ligne]));
+
+  const parSemaine = Array.from({ length: SEMAINES }, (_, i) => {
+    const ligne = parIndex.get(SEMAINES - 1 - i);
+    const total = ligne ? Number(ligne.avec_sla) : 0;
+    const dans = ligne ? Number(ligne.dans_les_delais) : 0;
+    return {
+      semaine: `S${i + 1}`,
+      avec_sla: total,
+      dans_les_delais: dans,
+      respect_sla: pourcentage(dans, total),
+    };
+  });
+
+  return {
+    resume: {
+      total_tickets: Number(resume.total_tickets),
+      retards: avecSla - dansLesDelais,
+      respect_sla: pourcentage(dansLesDelais, avecSla),
+      temps_moyen_minutes:
+        resume.temps_moyen_minutes === null ? null : Math.round(Number(resume.temps_moyen_minutes)),
+    },
+    par_semaine: parSemaine,
+    par_priorite: priorites.map((p) => ({
+      id: p.id,
+      nom: p.nom,
+      couleur: p.couleur,
+      tickets: Number(p.tickets),
+      avec_sla: Number(p.avec_sla),
+      dans_les_delais: Number(p.dans_les_delais),
+      respect_sla: pourcentage(p.dans_les_delais, p.avec_sla),
+    })),
+  };
+};
+
+module.exports = { getDashboard, getTechniciens, getRapportSla };

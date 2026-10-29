@@ -8,5 +8,6 @@ router.use(authMiddleware);
 
 router.get('/dashboard', roleMiddleware('admin', 'technicien'), statsController.getDashboard);
 router.get('/techniciens', roleMiddleware('admin'), statsController.getTechniciens);
+router.get('/sla', roleMiddleware('admin'), statsController.getRapportSla);
 
 module.exports = router;
