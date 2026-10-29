@@ -1,3 +1,5 @@
+import type { StatutUtilisateur } from './user';
+
 export interface ResumeStats {
   tickets_ouverts: number;
   sla_depasse: number;
@@ -27,4 +29,16 @@ export interface DashboardStats {
   resume: ResumeStats;
   charge_techniciens: ChargeTechnicien[];
   derniers_tickets: DernierTicket[];
+}
+
+export interface StatTechnicien {
+  id: number;
+  nom: string;
+  prenom: string | null;
+  email: string;
+  statut: StatutUtilisateur;
+  equipe_id: number | null;
+  equipe_nom: string | null;
+  tickets_en_cours: number;
+  resolus_ce_mois: number;
 }
