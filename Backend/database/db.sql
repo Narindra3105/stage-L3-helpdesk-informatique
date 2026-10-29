@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS equipe (
 CREATE TABLE IF NOT EXISTS utilisateur (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) DEFAULT NULL,
     email VARCHAR(150) NOT NULL,
     mdp VARCHAR(255) NOT NULL,
     role ENUM ('admin', 'technicien', 'demandeur') NOT NULL DEFAULT 'demandeur',

@@ -13,3 +13,16 @@ export interface Utilisateur {
   derniere_activite: string | null;
   date_creation: string;
 }
+
+export interface UtilisateurPayload {
+  nom: string;
+  prenom: string | null;
+  email: string;
+  role: Role;
+  equipe_id: number | null;
+  statut: StatutUtilisateur;
+}
+
+export interface NouvelUtilisateurPayload extends UtilisateurPayload {
+  mdp: string;
+}

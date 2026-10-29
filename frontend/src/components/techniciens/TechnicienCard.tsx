@@ -15,9 +15,10 @@ const statuts: Record<StatutUtilisateur, { libelle: string; couleur: CouleurBadg
 
 interface TechnicienCardProps {
   technicien: StatTechnicien;
+  onModifier: (technicien: StatTechnicien) => void;
 }
 
-export default function TechnicienCard({ technicien }: TechnicienCardProps) {
+export default function TechnicienCard({ technicien, onModifier }: TechnicienCardProps) {
   const statut = statuts[technicien.statut];
 
   return (
@@ -53,6 +54,13 @@ export default function TechnicienCard({ technicien }: TechnicienCardProps) {
           danger={estSurcharge(technicien.tickets_en_cours)}
         />
       </div>
+
+      <button
+        onClick={() => onModifier(technicien)}
+        className="mt-4 w-full rounded-lg border border-slate-300 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+      >
+        Modifier
+      </button>
     </div>
   );
 }
