@@ -8,6 +8,7 @@ import TicketBoard from '../components/tickets/TicketBoard';
 import type { Priorite, Statut } from '../types/referentiel';
 import type { Ticket } from '../types/ticket';
 import TicketFilters from '../components/tickets/TicketFilters';
+import { peutChangerStatut } from '../utils/permissions';
 
 export default function TicketsPage() {
   const { user } = useAuth();
@@ -81,15 +82,7 @@ export default function TicketsPage() {
     });
   }, [tickets, recherche, prioriteFiltre, technicienFiltre]);
 
-  const peutDeplacer = (ticket: Ticket): boolean => {
-    if (!user) {
-      return false;
-    }
-    if (user.role === 'admin') {
-      return true;
-    }
-    return user.role === 'technicien' && ticket.technicien_id === user.id;
-  };
+  const peutDeplacer = (ticket: Ticket): boolean => peutChangerStatut(user, ticket);
 
   const deplacer = async (ticketId: number, statutId: number) => {
     const ticket = tickets.find((t) => t.id === ticketId);
