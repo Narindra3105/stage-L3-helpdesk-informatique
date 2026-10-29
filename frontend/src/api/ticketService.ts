@@ -1,5 +1,5 @@
 import axiosClient from './axiosClient';
-import type { Ticket } from '../types/ticket';
+import type { NouveauTicketPayload, Ticket } from '../types/ticket';
 
 export const getTickets = async (): Promise<Ticket[]> => {
   const { data } = await axiosClient.get<Ticket[]>('/tickets');
@@ -8,6 +8,11 @@ export const getTickets = async (): Promise<Ticket[]> => {
 
 export const getTicket = async (id: number): Promise<Ticket> => {
   const { data } = await axiosClient.get<Ticket>(`/tickets/${id}`);
+  return data;
+};
+
+export const creerTicket = async (payload: NouveauTicketPayload): Promise<Ticket> => {
+  const { data } = await axiosClient.post<Ticket>('/tickets', payload);
   return data;
 };
 

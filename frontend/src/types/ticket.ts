@@ -13,6 +13,8 @@ export interface Ticket {
   priorite_id: number;
   priorite_nom: string;
   priorite_couleur: string;
+  categorie_id: number | null;
+  categorie_nom: string | null;
   statut_id: number;
   statut_nom: string;
   est_final: number;
@@ -24,4 +26,12 @@ export interface Ticket {
   date_resolution: string | null;
   reouvert: number;
   nb_reouvertures: number;
+}
+
+export interface NouveauTicketPayload {
+  sujet: string;
+  description?: string;
+  equipe_id: number;
+  priorite_id: number;
+  categorie_id: number;
 }

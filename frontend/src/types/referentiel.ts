@@ -10,3 +10,13 @@ export interface Priorite {
   nom: string;
   couleur: string;
 }
+
+export interface Categorie {
+  id: number;
+  nom: string;
+}
+
+export interface Equipe {
+  id: number;
+  nom: string;
+}

@@ -16,6 +16,7 @@ export default function TicketInfo({ ticket }: TicketInfoProps) {
     { label: 'Demandeur', valeur: nomComplet(ticket.demandeur_prenom, ticket.demandeur_nom) },
     { label: 'Technicien', valeur: ticket.technicien_nom ?? 'Non assigné' },
     { label: 'Équipe', valeur: ticket.equipe_nom },
+    { label: 'Catégorie', valeur: ticket.categorie_nom ?? '—' },
     { label: 'Créé le', valeur: formatDateHeure(ticket.date_creation) },
     { label: 'Première réponse', valeur: formatDateHeure(ticket.date_premiere_reponse) },
     { label: 'Résolu le', valeur: formatDateHeure(ticket.date_resolution) },
