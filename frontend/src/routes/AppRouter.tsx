@@ -8,6 +8,7 @@ import TicketDetailPage from '../pages/TicketDetailPage';
 import NouveauTicketPage from '../pages/NouveauTicketPage';
 import TechniciensPage from '../pages/TechniciensPage';
 import RapportsSlaPage from '../pages/RapportsSlaPage';
+import ParametresPage from '../pages/ParametresPage';
 
 export default function AppRouter() {
   return (
@@ -23,6 +24,7 @@ export default function AppRouter() {
             <Route element={<ProtectedRoute roles={['admin']} />}>
               <Route path="/techniciens" element={<TechniciensPage />} />
               <Route path="/rapports-sla" element={<RapportsSlaPage />} />
+              <Route path="/parametres" element={<ParametresPage />} />
             </Route>
           </Route>
         </Route>

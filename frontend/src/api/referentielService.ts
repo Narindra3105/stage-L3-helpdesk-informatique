@@ -20,3 +20,12 @@ export const getEquipes = async (): Promise<Equipe[]> => {
   const { data } = await axiosClient.get<Equipe[]>('/equipes');
   return data;
 };
+
+export const creerCategorie = async (nom: string): Promise<Categorie> => {
+  const { data } = await axiosClient.post<Categorie>('/categories', { nom });
+  return data;
+};
+
+export const supprimerCategorie = async (id: number): Promise<void> => {
+  await axiosClient.delete(`/categories/${id}`);
+};

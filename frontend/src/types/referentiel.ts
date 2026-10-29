@@ -8,7 +8,8 @@ export interface Statut {
 export interface Priorite {
   id: number;
   nom: string;
-  couleur: string;
+  niveau_ordre: number;
+  couleur: string | null;
 }
 
 export interface Categorie {
