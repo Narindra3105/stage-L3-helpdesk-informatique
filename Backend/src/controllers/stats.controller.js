@@ -4,5 +4,8 @@ const getDashboard = async (req, res) => {
   const data = await statsModel.getDashboard();
   res.json(data);
 };
-
-module.exports = { getDashboard };
+const getTechniciens = async (req, res) => {
+  const data = await statsModel.getTechniciens();
+  res.json(data);
+};
+module.exports = { getDashboard, getTechniciens};

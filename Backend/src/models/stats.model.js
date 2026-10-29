@@ -90,5 +90,29 @@ const getDashboard = async () => {
     derniers_tickets: derniersTickets,
   };
 };
+const getTechniciens = async () => {
+  const [rows] = await pool.query(`
+    SELECT u.id, u.nom, u.prenom, u.email, u.statut, u.equipe_id,
+           e.nom AS equipe_nom,
+           COUNT(CASE WHEN s.est_final = 0 THEN 1 END) AS tickets_en_cours,
+           COUNT(
+             CASE WHEN s.est_final = 1
+                   AND t.date_resolution >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+                  THEN 1 END
+           ) AS resolus_ce_mois
+    FROM utilisateur u
+    LEFT JOIN equipe e ON e.id = u.equipe_id
+    LEFT JOIN ticket t ON t.technicien_id = u.id
+    LEFT JOIN statut s ON s.id = t.statut_id
+    WHERE u.role = 'technicien'
+    GROUP BY u.id, u.nom, u.prenom, u.email, u.statut, u.equipe_id, e.nom
+    ORDER BY u.nom ASC, u.prenom ASC
+  `);
 
-module.exports = { getDashboard };
+  return rows.map((r) => ({
+    ...r,
+    tickets_en_cours: Number(r.tickets_en_cours),
+    resolus_ce_mois: Number(r.resolus_ce_mois),
+  }));
+};
+module.exports = { getDashboard, getTechniciens };

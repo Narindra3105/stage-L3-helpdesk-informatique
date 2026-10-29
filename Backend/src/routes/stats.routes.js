@@ -7,5 +7,6 @@ const statsController = require('../controllers/stats.controller');
 router.use(authMiddleware);
 
 router.get('/dashboard', roleMiddleware('admin', 'technicien'), statsController.getDashboard);
+router.get('/techniciens', roleMiddleware('admin'), statsController.getTechniciens);
 
 module.exports = router;
