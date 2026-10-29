@@ -3,6 +3,7 @@ import Layout from '../components/layout/Layout';
 import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import ProtectedRoute from './protectedRoute';
+import TicketsPage from '../pages/TicketsPage';
 
 export default function AppRouter() {
   return (
@@ -12,6 +13,7 @@ export default function AppRouter() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/" element={<DashboardPage />} />
+            <Route path="/tickets" element={<TicketsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

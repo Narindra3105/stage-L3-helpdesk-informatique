@@ -2,11 +2,13 @@ import type { CouleurBadge } from '../components/common/Badge';
 
 export const couleurPriorite = (nom: string): CouleurBadge => {
   switch (nom.toLowerCase()) {
+    case 'urgente':
     case 'critique':
-    case 'haute':
       return 'rouge';
-    case 'moyenne':
+    case 'haute':
       return 'orange';
+    case 'moyenne':
+      return 'bleu';
     case 'basse':
       return 'vert';
     default:
@@ -16,16 +18,16 @@ export const couleurPriorite = (nom: string): CouleurBadge => {
 
 export const couleurStatut = (nom: string): CouleurBadge => {
   switch (nom.toLowerCase()) {
+    case 'ouvert':
     case 'nouveau':
       return 'bleu';
     case 'en cours':
       return 'orange';
-    case 'en attente':
-      return 'gris';
     case 'résolu':
-    case 'clos':
-    case 'fermé':
       return 'vert';
+    case 'en attente':
+    case 'clos':
+      return 'gris';
     default:
       return 'gris';
   }
