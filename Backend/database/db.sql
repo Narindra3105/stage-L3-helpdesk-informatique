@@ -62,6 +62,14 @@ CREATE TABLE IF NOT EXISTS sla (
     CONSTRAINT uq_sla_priorite_equipe UNIQUE (priorite_id, equipe_id)
 );
 
+CREATE TABLE IF NOT EXISTS categorie (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    description VARCHAR(255) DEFAULT NULL,
+
+    CONSTRAINT uq_categorie_nom UNIQUE(nom)
+);
+
 CREATE TABLE IF NOT EXISTS ticket (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     numero VARCHAR(20) NOT NULL,
@@ -71,6 +79,7 @@ CREATE TABLE IF NOT EXISTS ticket (
     technicien_id INT UNSIGNED DEFAULT NULL,
     equipe_id INT UNSIGNED NOT NULL,
     priorite_id INT UNSIGNED NOT NULL,
+    categorie_id INT UNSIGNED DEFAULT NULL,
     statut_id INT UNSIGNED NOT NULL,
     sla_id INT UNSIGNED DEFAULT NULL,
     date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -86,12 +95,14 @@ CREATE TABLE IF NOT EXISTS ticket (
     CONSTRAINT fk_ticket_technicien FOREIGN KEY (technicien_id) REFERENCES utilisateur(id) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_ticket_equipe FOREIGN KEY (equipe_id) REFERENCES equipe(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_ticket_priorite FOREIGN KEY (priorite_id) REFERENCES priorite(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_ticket_categorie FOREIGN KEY (categorie_id) REFERENCES categorie(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_ticket_statut FOREIGN KEY (statut_id) REFERENCES statut(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT fk_ticket_sla FOREIGN KEY (sla_id) REFERENCES sla(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE INDEX idx_ticket_statut ON ticket(statut_id);
 CREATE INDEX idx_ticket_priorite ON ticket(priorite_id);
+CREATE INDEX idx_ticket_categorie ON ticket(categorie_id);
 CREATE INDEX idx_ticket_equipe ON ticket(equipe_id);
 CREATE INDEX idx_ticket_demandeur ON ticket(demandeur_id);
 CREATE INDEX idx_ticket_technicien ON ticket(technicien_id);
@@ -111,13 +122,6 @@ CREATE TABLE IF NOT EXISTS commentaire (
 
 CREATE INDEX idx_commentaire_ticket ON commentaire(ticket_id);
 
-CREATE TABLE IF NOT EXISTS categorie (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    description VARCHAR(255) DEFAULT NULL,
-
-    CONSTRAINT uq_categorie_nom UNIQUE(nom)
-);
 
 CREATE TABLE IF NOT EXISTS article (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

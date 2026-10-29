@@ -7,6 +7,7 @@ const SELECT_TICKET = `
            t.technicien_id, tc.nom AS technicien_nom,
            t.equipe_id, e.nom AS equipe_nom,
            t.priorite_id, p.nom AS priorite_nom, p.couleur AS priorite_couleur,
+           t.categorie_id, cat.nom AS categorie_nom,
            t.statut_id, s.nom AS statut_nom, s.est_final,
            t.sla_id, t.date_creation, t.date_limite_reponse, t.date_limite_resolution,
            t.date_premiere_reponse, t.date_resolution, t.reouvert, t.nb_reouvertures
@@ -15,6 +16,7 @@ const SELECT_TICKET = `
     LEFT JOIN utilisateur tc ON tc.id = t.technicien_id
     JOIN equipe e ON e.id = t.equipe_id
     JOIN priorite p ON p.id = t.priorite_id
+    LEFT JOIN categorie cat ON cat.id = t.categorie_id
     JOIN statut s ON s.id = t.statut_id
 `;
 
@@ -38,7 +40,7 @@ const findById = async (id) => {
     return rows[0];
 };
 
-const create = async ({ sujet, description, demandeur_id, equipe_id, priorite_id }) => {
+const create = async ({ sujet, description, demandeur_id, equipe_id, priorite_id, categorie_id }) => {
     const conn = await pool.getConnection();
 
     try {
@@ -62,9 +64,9 @@ const create = async ({ sujet, description, demandeur_id, equipe_id, priorite_id
 
         const [result] = await conn.query(
             `INSERT INTO ticket
-                (numero, sujet, description, demandeur_id, equipe_id, priorite_id,
+                (numero, sujet, description, demandeur_id, equipe_id, priorite_id, categorie_id,
                  statut_id, sla_id, date_limite_reponse, date_limite_resolution)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?,
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,
                      DATE_ADD(NOW(), INTERVAL ? MINUTE),
                      DATE_ADD(NOW(), INTERVAL ? MINUTE))`,
             [
@@ -74,6 +76,7 @@ const create = async ({ sujet, description, demandeur_id, equipe_id, priorite_id
                 demandeur_id,
                 equipe_id,
                 priorite_id,
+                categorie_id,
                 statut.id,
                 sla ? sla.id : null,
                 sla ? sla.delai_premiere_reponse_min : null,

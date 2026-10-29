@@ -27,7 +27,13 @@ const champsReferences = [
         .notEmpty().withMessage("La priorité est obligatoire").bail()
         .isInt({min:1}).withMessage("L'identifiant de la priorité doit être un entier positif")
         .toInt(),
+
+    body('categorie_id')
+        .notEmpty().withMessage("La catégorie est obligatoire").bail()
+        .isInt({min:1}).withMessage("L'identifiant de la catégorie doit être un entier positif")
+        .toInt(),
 ];
+
 const assignationRules = [
     body('technicien_id').custom((value) => {
         if (value === null) return true;
@@ -37,15 +43,16 @@ const assignationRules = [
         );
     }),
 ];
+
 const changementStatutRules = [
     body('statut_id')
         .notEmpty().withMessage('Le statut est obligatoire').bail()
         .isInt({min:1}).withMessage("L'identifiant du statut doit être un entier positif")
         .toInt(),
 ];
+
 const creerTicketRules = [...champsTexte, ...champsReferences];
 
 const modifierTicketRules = champsTexte;
 
-module.exports = {idRule, creerTicketRules, modifierTicketRules,assignationRules,changementStatutRules};
-
+module.exports = {idRule, creerTicketRules, modifierTicketRules, assignationRules, changementStatutRules};

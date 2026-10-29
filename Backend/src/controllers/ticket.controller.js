@@ -9,6 +9,7 @@ const MESSAGES_DB = {
     missing: {
         fk_ticket_equipe:"L'équipe indiquée n'existe pas",
         fk_ticket_priorite:"La priorité indiquée n'existe pas",
+        fk_ticket_categorie:"La catégorie indiquée n'existe pas",
     },
 };
 
@@ -33,13 +34,14 @@ exports.getOne = async(req, res) =>{
 };
 
 exports.create = async(req, res) =>{
-    const {sujet, description, equipe_id, priorite_id} = req.body;
+    const {sujet, description, equipe_id, priorite_id, categorie_id} = req.body;
     try{
         const ticket = await ticketModel.create({
             sujet,
             description,
             equipe_id,
             priorite_id,
+            categorie_id,
             demandeur_id:req.user.id,
         });
         res.status(201).json(ticket);
