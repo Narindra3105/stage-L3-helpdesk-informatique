@@ -15,6 +15,7 @@ import { peutChangerStatut } from '../utils/permissions';
 import type { Statut } from '../types/referentiel';
 import type { Ticket } from '../types/ticket';
 import type { Utilisateur } from '../types/user';
+import TicketComments from '../components/tickets/TicketComments';
 
 const classeSelect =
   'mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 disabled:opacity-60';
@@ -155,6 +156,7 @@ export default function TicketDetailPage() {
               {ticket.description ?? 'Aucune description.'}
             </p>
           </div>
+          <TicketComments ticket={ticket} />
         </div>
 
         <div className="space-y-6">

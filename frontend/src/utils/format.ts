@@ -16,3 +16,7 @@ export const formatDuree = (minutes: number | null): string => {
 export const nomComplet = (prenom: string | null, nom: string): string => {
   return [prenom, nom].filter(Boolean).join(' ');
 };
+export const initiales = (prenom: string | null, nom: string): string => {
+  const lettres = prenom ? prenom.charAt(0) + nom.charAt(0) : nom.slice(0, 2);
+  return lettres.toUpperCase();
+};

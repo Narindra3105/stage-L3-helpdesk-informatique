@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
-import type { Role } from '../../types/user';
+import { initiales, nomComplet } from '../../utils/format';
+import { libellesRole } from '../../utils/roles';
 
 const liens = [
   { to: '/', label: 'Tableau de bord', end: true },
@@ -12,22 +13,11 @@ const liens = [
   { to: '/parametres', label: 'Paramètres', end: false },
 ];
 
-const libellesRole: Record<Role, string> = {
-  admin: 'Administrateur',
-  technicien: 'Technicien',
-  demandeur: 'Demandeur',
-};
-
 export default function Sidebar() {
   const { user, logout } = useAuth();
 
-  const nomComplet = user ? [user.prenom, user.nom].filter(Boolean).join(' ') : '';
-  const initiales = user
-    ? (user.prenom
-        ? user.prenom.charAt(0) + user.nom.charAt(0)
-        : user.nom.slice(0, 2)
-      ).toUpperCase()
-    : '';
+  const nomUtilisateur = user ? nomComplet(user.prenom, user.nom) : '';
+  const initialesUtilisateur = user ? initiales(user.prenom, user.nom) : '';
 
   return (
     <aside className="flex h-full w-56 shrink-0 flex-col border-r border-slate-200 bg-white px-3 py-5">
@@ -59,10 +49,10 @@ export default function Sidebar() {
 
       <div className="flex items-center gap-3 border-t border-slate-200 px-3 pt-4">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-xs font-bold text-blue-700">
-          {initiales}
+          {initialesUtilisateur}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-slate-900">{nomComplet}</p>
+          <p className="truncate text-sm font-semibold text-slate-900">{nomUtilisateur}</p>
           <p className="text-xs text-slate-500">{user ? libellesRole[user.role] : ''}</p>
         </div>
         <button
