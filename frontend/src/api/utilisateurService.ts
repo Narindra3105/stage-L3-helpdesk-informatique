@@ -23,6 +23,10 @@ export const modifierUtilisateur = async (
   return data;
 };
 
+export const reinitialiserMdp = async (id: number, mdp: string): Promise<void> => {
+  await axiosClient.patch(`/utilisateurs/${id}/mdp`, { mdp });
+};
+
 export const supprimerUtilisateur = async (id: number): Promise<void> => {
   await axiosClient.delete(`/utilisateurs/${id}`);
 };

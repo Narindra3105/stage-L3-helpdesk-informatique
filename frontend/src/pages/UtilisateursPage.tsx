@@ -4,6 +4,7 @@ import { getUtilisateurs, supprimerUtilisateur } from '../api/utilisateurService
 import Avatar from '../components/common/Avatar';
 import Badge from '../components/common/Badge';
 import Modal from '../components/common/Modal';
+import ReinitialiserMdpForm from '../components/utilisateurs/ReinitialiserMdpForm';
 import UtilisateurForm from '../components/utilisateurs/UtilisateurForm';
 import { useAuth } from '../hooks/useAuth';
 import { formatDateHeure } from '../utils/date';
@@ -20,7 +21,22 @@ import {
 import type { Equipe } from '../types/referentiel';
 import type { Utilisateur } from '../types/user';
 
-type EtatModal = { mode: 'creation' } | { mode: 'edition'; utilisateur: Utilisateur } | null;
+type EtatModal =
+  | { mode: 'creation' }
+  | { mode: 'edition'; utilisateur: Utilisateur }
+  | { mode: 'mdp'; utilisateur: Utilisateur }
+  | null;
+
+const titreModal = (etat: Exclude<EtatModal, null>): string => {
+  switch (etat.mode) {
+    case 'creation':
+      return 'Ajouter un utilisateur';
+    case 'edition':
+      return "Modifier l'utilisateur";
+    case 'mdp':
+      return 'Réinitialiser le mot de passe';
+  }
+};
 
 export default function UtilisateursPage() {
   const { user } = useAuth();
@@ -225,12 +241,18 @@ export default function UtilisateursPage() {
                           <td className="py-3 pr-4 text-slate-600">
                             {formatDateHeure(u.derniere_activite)}
                           </td>
-                          <td className="py-3 text-right">
+                          <td className="whitespace-nowrap py-3 text-right">
                             <button
                               onClick={() => setModal({ mode: 'edition', utilisateur: u })}
                               className="mr-3 text-xs font-medium text-blue-700 hover:underline"
                             >
                               Modifier
+                            </button>
+                            <button
+                              onClick={() => setModal({ mode: 'mdp', utilisateur: u })}
+                              className="mr-3 text-xs font-medium text-blue-700 hover:underline"
+                            >
+                              Mot de passe
                             </button>
                             {!estMoi && (
                               <button
@@ -253,17 +275,18 @@ export default function UtilisateursPage() {
       )}
 
       {modal && (
-        <Modal
-          titre={modal.mode === 'creation' ? 'Ajouter un utilisateur' : "Modifier l'utilisateur"}
-          onFermer={fermer}
-        >
-          <UtilisateurForm
-            utilisateur={modal.mode === 'edition' ? modal.utilisateur : undefined}
-            estMoi={modal.mode === 'edition' && user !== null && modal.utilisateur.id === user.id}
-            equipes={equipes}
-            onSucces={apresEnregistrement}
-            onAnnuler={fermer}
-          />
+        <Modal titre={titreModal(modal)} onFermer={fermer}>
+          {modal.mode === 'mdp' ? (
+            <ReinitialiserMdpForm utilisateur={modal.utilisateur} onFermer={fermer} />
+          ) : (
+            <UtilisateurForm
+              utilisateur={modal.mode === 'edition' ? modal.utilisateur : undefined}
+              estMoi={modal.mode === 'edition' && user !== null && modal.utilisateur.id === user.id}
+              equipes={equipes}
+              onSucces={apresEnregistrement}
+              onAnnuler={fermer}
+            />
+          )}
         </Modal>
       )}
     </div>
