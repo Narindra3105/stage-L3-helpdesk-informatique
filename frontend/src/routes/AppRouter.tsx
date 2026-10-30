@@ -7,6 +7,7 @@ import TicketsPage from '../pages/TicketsPage';
 import TicketDetailPage from '../pages/TicketDetailPage';
 import NouveauTicketPage from '../pages/NouveauTicketPage';
 import TechniciensPage from '../pages/TechniciensPage';
+import UtilisateursPage from '../pages/UtilisateursPage';
 import RapportsSlaPage from '../pages/RapportsSlaPage';
 import ParametresPage from '../pages/ParametresPage';
 
@@ -23,6 +24,7 @@ export default function AppRouter() {
             <Route path="/nouveau-ticket" element={<NouveauTicketPage />} />
             <Route element={<ProtectedRoute roles={['admin']} />}>
               <Route path="/techniciens" element={<TechniciensPage />} />
+              <Route path="/utilisateurs" element={<UtilisateursPage />} />
               <Route path="/rapports-sla" element={<RapportsSlaPage />} />
               <Route path="/parametres" element={<ParametresPage />} />
             </Route>

@@ -9,6 +9,7 @@ const liens = [
   { to: '/tickets', label: 'Tickets', end: false },
   { to: '/nouveau-ticket', label: 'Nouveau ticket', end: false },
   { to: '/techniciens', label: 'Techniciens', end: false },
+  { to: '/utilisateurs', label: 'Utilisateurs', end: false },
   { to: '/rapports-sla', label: 'Rapports SLA', end: false },
   { to: '/parametres', label: 'Paramètres', end: false },
 ];

@@ -22,3 +22,7 @@ export const modifierUtilisateur = async (
   const { data } = await axiosClient.put<Utilisateur>(`/utilisateurs/${id}`, payload);
   return data;
 };
+
+export const supprimerUtilisateur = async (id: number): Promise<void> => {
+  await axiosClient.delete(`/utilisateurs/${id}`);
+};

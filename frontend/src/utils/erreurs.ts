@@ -26,3 +26,10 @@ export const erreursChamps = (e: unknown): ErreurChamp[] => {
   }
   return [];
 };
+
+export const codeStatut = (e: unknown): number | null => {
+  if (isAxiosError(e) && e.response) {
+    return e.response.status;
+  }
+  return null;
+};
