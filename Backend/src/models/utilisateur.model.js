@@ -8,7 +8,6 @@ const findAll = async () => {
   return rows;
 };
 
-// Réservé à l'authentification : renvoie aussi `mdp` (jamais à envoyer au client)
 const findByEmail = async (email) => {
   const [rows] = await pool.query('SELECT * FROM utilisateur WHERE email = ?', [email]);
   return rows[0];
@@ -56,12 +55,15 @@ const updateDerniereActivite = async (id) => {
 const remove = async (id) => {
   await pool.query('DELETE FROM utilisateur WHERE id = ?', [id]);
 };
-
+const changerMdp = async (id, mdpHash) => {
+  await pool.query('UPDATE utilisateur SET mdp = ? WHERE id = ?', [mdpHash, id]);
+};
 module.exports = {
   findAll,
   findByEmail,
   findById,
   create,
+  changerMdp,
   update,
   updateDerniereActivite,
   remove,

@@ -7,6 +7,7 @@ const {
   idRule,
   creerUtilisateurRules,
   modifierUtilisateurRules,
+  mdpRules,
 } = require('../validators/utilisateur.validator');
 const utilisateurController = require('../controllers/utilisateur.controller');
 
@@ -16,6 +17,7 @@ router.get('/', utilisateurController.getAll);
 router.get('/:id', idRule, validate, utilisateurController.getOne);
 router.post('/', creerUtilisateurRules, validate, utilisateurController.create);
 router.put('/:id', idRule, modifierUtilisateurRules, validate, utilisateurController.update);
+router.patch('/:id/mdp', idRule, mdpRules, validate, utilisateurController.reinitialiserMdp);
 router.delete('/:id', idRule, validate, utilisateurController.remove);
 
 module.exports = router;

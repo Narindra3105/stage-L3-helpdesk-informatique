@@ -41,8 +41,7 @@ const champsCommuns = [
     .isIn(STATUTS).withMessage(`Le statut doit être : ${STATUTS.join(', ')}`),
 ];
 
-const creerUtilisateurRules = [
-  ...champsCommuns,
+const mdpRules = [
   body('mdp')
     .notEmpty().withMessage('Le mot de passe est obligatoire').bail()
     .isString().withMessage('Le mot de passe doit être une chaîne de caractères').bail()
@@ -50,6 +49,8 @@ const creerUtilisateurRules = [
     .withMessage('Le mot de passe doit contenir entre 8 et 72 caractères'),
 ];
 
+const creerUtilisateurRules = [...champsCommuns, ...mdpRules];
+
 const modifierUtilisateurRules = champsCommuns;
 
-module.exports = { idRule, creerUtilisateurRules, modifierUtilisateurRules };
+module.exports = { idRule, creerUtilisateurRules, modifierUtilisateurRules, mdpRules };

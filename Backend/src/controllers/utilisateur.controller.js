@@ -91,3 +91,15 @@ exports.remove = async (req, res) => {
     handleDbError(err, MESSAGES_DB);
   }
 };
+
+exports.reinitialiserMdp = async (req, res) => {
+  const existant = await utilisateurModel.findById(req.params.id);
+  if (!existant) {
+    throw new AppError('Utilisateur introuvable', 404);
+  }
+
+  const mdpHash = await bcrypt.hash(req.body.mdp, 10);
+  await utilisateurModel.changerMdp(req.params.id, mdpHash);
+
+  res.status(204).send();
+};
