@@ -3,6 +3,7 @@ import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import TicketColumn from './TicketColumn';
 import TicketCard from './TicketCard';
+import type { VarianteCarte } from './TicketCard';
 import DraggableTicketCard from './DraggableTicketCard';
 import type { Statut } from '../../types/referentiel';
 import type { Ticket } from '../../types/ticket';
@@ -12,9 +13,16 @@ interface TicketBoardProps {
   tickets: Ticket[];
   peutDeplacer: (ticket: Ticket) => boolean;
   onDeplacer: (ticketId: number, statutId: number) => void;
+  variante?: VarianteCarte;
 }
 
-export default function TicketBoard({ statuts, tickets, peutDeplacer, onDeplacer }: TicketBoardProps) {
+export default function TicketBoard({
+  statuts,
+  tickets,
+  peutDeplacer,
+  onDeplacer,
+  variante = 'admin',
+}: TicketBoardProps) {
   const [actif, setActif] = useState<Ticket | null>(null);
 
   const sensors = useSensors(
@@ -51,6 +59,7 @@ export default function TicketBoard({ statuts, tickets, peutDeplacer, onDeplacer
                   key={ticket.id}
                   ticket={ticket}
                   peutDeplacer={peutDeplacer(ticket)}
+                  variante={variante}
                 />
               ))}
             </TicketColumn>
@@ -58,7 +67,7 @@ export default function TicketBoard({ statuts, tickets, peutDeplacer, onDeplacer
         })}
       </div>
 
-      <DragOverlay>{actif ? <TicketCard ticket={actif} /> : null}</DragOverlay>
+      <DragOverlay>{actif ? <TicketCard ticket={actif} variante={variante} /> : null}</DragOverlay>
     </DndContext>
   );
 }

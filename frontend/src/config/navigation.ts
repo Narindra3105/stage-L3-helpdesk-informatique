@@ -18,7 +18,7 @@ export const menusParRole: Record<Role, LienMenu[]> = {
   ],
   technicien: [
     { to: '/', label: 'Tableau de bord', end: true },
-    { to: '/tickets', label: 'Tickets' },
+    { to: '/mes-tickets', label: 'Mes tickets' },
     { to: '/base-connaissances', label: 'Base de connaissances' },
   ],
   demandeur: [
@@ -26,4 +26,10 @@ export const menusParRole: Record<Role, LienMenu[]> = {
     { to: '/tickets', label: 'Mes tickets' },
     { to: '/base-connaissances', label: 'Aide' },
   ],
+};
+
+export const retourListeTickets: Record<Role, { to: string; label: string }> = {
+  admin: { to: '/tickets', label: 'Retour à la liste des tickets' },
+  technicien: { to: '/mes-tickets', label: 'Retour à mes tickets' },
+  demandeur: { to: '/tickets', label: 'Retour à mes tickets' },
 };

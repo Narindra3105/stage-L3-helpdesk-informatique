@@ -1,3 +1,6 @@
+import { isToday } from 'date-fns';
+import { formatDate } from './date';
+import { formatDuree } from './format';
 import type { Ticket } from '../types/ticket';
 
 export interface DelaiSla {
@@ -29,4 +32,24 @@ export const resolutionDansLesDelais = (ticket: Ticket): boolean | null => {
     return null;
   }
   return new Date(ticket.date_resolution) <= new Date(ticket.date_limite_resolution);
+};
+
+export const texteSlaCourt = (ticket: Ticket): string => {
+  if (ticket.est_final) {
+    if (!ticket.date_resolution) {
+      return 'Résolu';
+    }
+    return isToday(new Date(ticket.date_resolution))
+      ? "Résolu aujourd'hui"
+      : `Résolu le ${formatDate(ticket.date_resolution)}`;
+  }
+
+  const delai = calculerDelai(ticket);
+  if (delai === null) {
+    return 'Sans délai SLA';
+  }
+  if (delai.restantMinutes < 0) {
+    return 'SLA dépassé';
+  }
+  return formatDuree(delai.restantMinutes);
 };

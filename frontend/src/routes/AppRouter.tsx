@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 import LoginPage from '../pages/LoginPage';
 import HomePage from '../pages/HomePage';
 import TicketsPage from '../pages/TicketsPage';
+import MesTicketsPage from '../pages/MesTicketsPage';
 import TicketDetailPage from '../pages/TicketDetailPage';
 import ArticlesPage from '../pages/ArticlesPage';
 import ArticleDetailPage from '../pages/ArticleDetailPage';
@@ -25,6 +26,9 @@ export default function AppRouter() {
             <Route path="/tickets/:id" element={<TicketDetailPage />} />
             <Route path="/base-connaissances" element={<ArticlesPage />} />
             <Route path="/base-connaissances/:id" element={<ArticleDetailPage />} />
+            <Route element={<ProtectedRoute roles={['technicien']} />}>
+              <Route path="/mes-tickets" element={<MesTicketsPage />} />
+            </Route>
             <Route element={<ProtectedRoute roles={['admin', 'technicien']} />}>
               <Route path="/base-connaissances/nouveau" element={<ArticleEditorPage />} />
               <Route path="/base-connaissances/:id/modifier" element={<ArticleEditorPage />} />
