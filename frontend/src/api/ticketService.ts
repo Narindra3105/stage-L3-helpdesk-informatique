@@ -32,3 +32,8 @@ export const assignerTicket = async (
   });
   return data;
 };
+
+export const prendreTicket = async (id: number): Promise<Ticket> => {
+  const { data } = await axiosClient.patch<Ticket>(`/tickets/${id}/prendre`);
+  return data;
+};
