@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './protectedRoute';
 import Layout from '../components/layout/Layout';
 import LoginPage from '../pages/LoginPage';
-import DashboardPage from '../pages/DashboardPage';
+import HomePage from '../pages/HomePage';
 import TicketsPage from '../pages/TicketsPage';
 import TicketDetailPage from '../pages/TicketDetailPage';
 import ArticlesPage from '../pages/ArticlesPage';
@@ -20,7 +20,7 @@ export default function AppRouter() {
         <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/tickets" element={<TicketsPage />} />
             <Route path="/tickets/:id" element={<TicketDetailPage />} />
             <Route path="/base-connaissances" element={<ArticlesPage />} />

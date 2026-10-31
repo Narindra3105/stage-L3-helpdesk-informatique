@@ -1,22 +1,14 @@
 import { NavLink } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
+import { menusParRole } from '../../config/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import { initiales, nomComplet } from '../../utils/format';
 import { libellesRole } from '../../utils/roles';
 
-const liens = [
-  { to: '/', label: 'Tableau de bord', end: true },
-  { to: '/tickets', label: 'Tickets', end: false },
-  { to: '/base-connaissances', label: 'Base de connaissances', end: false },
-  { to: '/techniciens', label: 'Techniciens', end: false },
-  { to: '/utilisateurs', label: 'Utilisateurs', end: false },
-  { to: '/rapports-sla', label: 'Rapports SLA', end: false },
-  { to: '/parametres', label: 'Paramètres', end: false },
-];
-
 export default function Sidebar() {
   const { user, logout } = useAuth();
 
+  const liens = user ? menusParRole[user.role] : [];
   const nomUtilisateur = user ? nomComplet(user.prenom, user.nom) : '';
   const initialesUtilisateur = user ? initiales(user.prenom, user.nom) : '';
 
