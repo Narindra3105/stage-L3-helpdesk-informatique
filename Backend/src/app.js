@@ -22,6 +22,7 @@ app.use('/api/utilisateurs',require('./routes/utilisateur.routes'));
 app.use('/api/commentaires', require('./routes/commentaire.routes'));
 app.use('/api/articles', require('./routes/article.routes'));
 app.use('/api/stats', require('./routes/stats.routes'));
+app.use('/api/techniciens', require('./routes/technicien.routes'));
 
 app.use(notFound);
 app.use(errorHandler);

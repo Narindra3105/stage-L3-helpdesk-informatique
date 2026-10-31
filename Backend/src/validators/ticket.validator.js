@@ -51,8 +51,14 @@ const changementStatutRules = [
         .toInt(),
 ];
 
+const transfertRules = [
+    body('technicien_id')
+        .notEmpty().withMessage('Le technicien est obligatoire').bail()
+        .isInt({min:1}).withMessage("L'identifiant du technicien doit être un entier positif")
+        .toInt(),
+];
 const creerTicketRules = [...champsTexte, ...champsReferences];
 
 const modifierTicketRules = champsTexte;
 
-module.exports = {idRule, creerTicketRules, modifierTicketRules, assignationRules, changementStatutRules};
+module.exports = {idRule, creerTicketRules, modifierTicketRules, assignationRules, changementStatutRules,transfertRules};

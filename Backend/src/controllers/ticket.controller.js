@@ -163,6 +163,48 @@ exports.prendre = async (req, res) => {
     const ticketMaj = await ticketModel.findById(ticket.id);
     res.json(ticketMaj);
 };
+exports.transferer = async (req, res) => {
+    const ticket = await ticketModel.findById(req.params.id);
+    if (!ticket) {
+        throw new AppError('Ticket introuvable', 404);
+    }
+
+    if (ticket.est_final) {
+        throw new AppError('Impossible de transférer un ticket clos', 409);
+    }
+
+    if (ticket.technicien_id !== req.user.id) {
+        throw new AppError('Ce ticket ne vous est pas assigné', 403);
+    }
+
+    const { technicien_id } = req.body;
+
+    if (technicien_id === req.user.id) {
+        throw new AppError('Vous ne pouvez pas vous transférer le ticket à vous-même', 400);
+    }
+
+    const collegue = await utilisateurModel.findById(technicien_id);
+    if (!collegue) {
+        throw new AppError("Cet utilisateur n'existe pas", 400);
+    }
+    if (collegue.role !== 'technicien') {
+        throw new AppError("Cet utilisateur n'est pas un technicien", 400);
+    }
+    if (collegue.statut !== 'actif') {
+        throw new AppError(
+            `Ce technicien n'est pas disponible (statut : ${collegue.statut})`,
+            400
+        );
+    }
+
+    const transfere = await ticketModel.transferer(ticket.id, req.user.id, technicien_id);
+    if (!transfere) {
+        throw new AppError("Ce ticket ne vous est plus assigné", 409);
+    }
+
+    const ticketMaj = await ticketModel.findById(ticket.id);
+    res.json(ticketMaj);
+};
 
 exports.remove = async (req, res) =>{
     const existant = await ticketModel.findById(req.params.id);

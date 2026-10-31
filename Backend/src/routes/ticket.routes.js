@@ -42,6 +42,14 @@ router.patch(
   ticketController.prendre
 );
 router.patch(
+  '/:id/transfert',
+  roleMiddleware('technicien'),
+  idRule,
+  transfertRules,
+  validate,
+  ticketController.transferer
+);
+router.patch(
   '/:id/statut',
   roleMiddleware('admin', 'technicien'),
   idRule,

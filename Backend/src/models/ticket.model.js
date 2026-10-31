@@ -145,4 +145,12 @@ const prendre = async (id, technicienId) => {
     );
     return result.affectedRows === 1;
 };
-module.exports = { findAll, findById, create, assigner,changerStatut,prendre, update, remove };
+const transferer = async (id, deTechnicienId, versTechnicienId) => {
+    const [result] = await pool.query(
+        'UPDATE ticket SET technicien_id = ? WHERE id = ? AND technicien_id = ?',
+        [versTechnicienId, id, deTechnicienId]
+    );
+    return result.affectedRows === 1;
+};
+
+module.exports = { findAll, findById, create, assigner,changerStatut,prendre,transferer, update, remove };

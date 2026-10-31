@@ -58,12 +58,24 @@ const remove = async (id) => {
 const changerMdp = async (id, mdpHash) => {
   await pool.query('UPDATE utilisateur SET mdp = ? WHERE id = ?', [mdpHash, id]);
 };
+
+const findTechniciensActifs = async () => {
+  const [rows] = await pool.query(
+    `SELECT id, nom, prenom, equipe_id
+     FROM utilisateur
+     WHERE role = 'technicien' AND statut = 'actif'
+     ORDER BY nom ASC, prenom ASC`
+  );
+  return rows;
+};
+
 module.exports = {
   findAll,
   findByEmail,
   findById,
   create,
   changerMdp,
+  findTechniciensActifs,
   update,
   updateDerniereActivite,
   remove,

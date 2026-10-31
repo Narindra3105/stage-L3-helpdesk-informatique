@@ -103,3 +103,8 @@ exports.reinitialiserMdp = async (req, res) => {
 
   res.status(204).send();
 };
+
+exports.getTechniciensActifs = async (req, res) => {
+  const techniciens = await utilisateurModel.findTechniciensActifs();
+  res.json(techniciens);
+};
