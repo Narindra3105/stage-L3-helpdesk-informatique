@@ -1,6 +1,7 @@
 import EnConstruction from '../components/common/EnConstruction';
 import { useAuth } from '../hooks/useAuth';
 import DashboardPage from './DashboardPage';
+import DashboardTechnicienPage from './DashboardTechnicienPage';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -13,12 +14,7 @@ export default function HomePage() {
     case 'admin':
       return <DashboardPage />;
     case 'technicien':
-      return (
-        <EnConstruction
-          titre="Tableau de bord"
-          message="Votre tableau de bord personnel arrive bientôt. En attendant, vous pouvez consulter les tickets et la base de connaissances."
-        />
-      );
+      return <DashboardTechnicienPage />;
     case 'demandeur':
       return (
         <EnConstruction
