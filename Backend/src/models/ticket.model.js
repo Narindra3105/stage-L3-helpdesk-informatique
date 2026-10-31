@@ -138,4 +138,11 @@ const changerStatut = async (id, statutId, effets = {}) => {
     await pool.query(`UPDATE ticket SET ${sets.join(', ')} WHERE id = ?`, params);
     return findById(id);
 };
-module.exports = { findAll, findById, create, assigner,changerStatut, update, remove };
+const prendre = async (id, technicienId) => {
+    const [result] = await pool.query(
+        'UPDATE ticket SET technicien_id = ? WHERE id = ? AND technicien_id IS NULL',
+        [technicienId, id]
+    );
+    return result.affectedRows === 1;
+};
+module.exports = { findAll, findById, create, assigner,changerStatut,prendre, update, remove };

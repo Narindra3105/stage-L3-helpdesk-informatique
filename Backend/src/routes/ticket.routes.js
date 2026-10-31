@@ -35,6 +35,13 @@ router.patch(
   ticketController.assigner
 );
 router.patch(
+  '/:id/prendre',
+  roleMiddleware('technicien'),
+  idRule,
+  validate,
+  ticketController.prendre
+);
+router.patch(
   '/:id/statut',
   roleMiddleware('admin', 'technicien'),
   idRule,

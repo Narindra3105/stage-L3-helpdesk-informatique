@@ -136,6 +136,34 @@ exports.changerStatut = async (req, res) => {
     res.json(ticketMaj);
 };
 
+exports.prendre = async (req, res) => {
+    const ticket = await ticketModel.findById(req.params.id);
+    if (!ticket) {
+        throw new AppError('Ticket introuvable', 404);
+    }
+
+    if (ticket.est_final) {
+        throw new AppError('Impossible de prendre un ticket clos', 409);
+    }
+
+    if (ticket.technicien_id !== null) {
+        throw new AppError('Ce ticket a déjà été pris en charge', 409);
+    }
+
+    const technicien = await utilisateurModel.findById(req.user.id);
+    if (!technicien || technicien.statut !== 'actif') {
+        throw new AppError('Vous devez être disponible (statut actif) pour prendre un ticket', 400);
+    }
+
+    const pris = await ticketModel.prendre(ticket.id, req.user.id);
+    if (!pris) {
+        throw new AppError('Ce ticket a déjà été pris en charge', 409);
+    }
+
+    const ticketMaj = await ticketModel.findById(ticket.id);
+    res.json(ticketMaj);
+};
+
 exports.remove = async (req, res) =>{
     const existant = await ticketModel.findById(req.params.id);
     if(!existant){
