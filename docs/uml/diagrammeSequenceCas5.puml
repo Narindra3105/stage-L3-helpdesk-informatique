@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU5 - Assigner un ticket
-
 actor "Technicien" as T
 participant ":Système Helpdesk" as S
 

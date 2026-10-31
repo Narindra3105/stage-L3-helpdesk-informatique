@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU7 - Gérer les utilisateurs et les équipes
-
 actor "Administrateur" as A
 participant ":Système Helpdesk" as S
 

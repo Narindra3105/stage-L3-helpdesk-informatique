@@ -5,7 +5,6 @@ import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import TicketsPage from '../pages/TicketsPage';
 import TicketDetailPage from '../pages/TicketDetailPage';
-import NouveauTicketPage from '../pages/NouveauTicketPage';
 import ArticlesPage from '../pages/ArticlesPage';
 import ArticleDetailPage from '../pages/ArticleDetailPage';
 import ArticleEditorPage from '../pages/ArticleEditorPage';
@@ -24,7 +23,6 @@ export default function AppRouter() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/tickets" element={<TicketsPage />} />
             <Route path="/tickets/:id" element={<TicketDetailPage />} />
-            <Route path="/nouveau-ticket" element={<NouveauTicketPage />} />
             <Route path="/base-connaissances" element={<ArticlesPage />} />
             <Route path="/base-connaissances/:id" element={<ArticleDetailPage />} />
             <Route element={<ProtectedRoute roles={['admin', 'technicien']} />}>

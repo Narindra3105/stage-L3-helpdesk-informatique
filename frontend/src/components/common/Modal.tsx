@@ -2,13 +2,21 @@ import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { X } from 'lucide-react';
 
+type LargeurModal = 'md' | 'lg';
+
+const largeurs: Record<LargeurModal, string> = {
+  md: 'max-w-lg',
+  lg: 'max-w-2xl',
+};
+
 interface ModalProps {
   titre: string;
   onFermer: () => void;
+  largeur?: LargeurModal;
   children: ReactNode;
 }
 
-export default function Modal({ titre, onFermer, children }: ModalProps) {
+export default function Modal({ titre, onFermer, largeur = 'md', children }: ModalProps) {
   useEffect(() => {
     const surTouche = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -26,7 +34,7 @@ export default function Modal({ titre, onFermer, children }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={titre}
-        className="max-h-full w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl"
+        className={`max-h-full w-full overflow-y-auto rounded-2xl bg-white p-6 shadow-xl ${largeurs[largeur]}`}
       >
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">{titre}</h2>

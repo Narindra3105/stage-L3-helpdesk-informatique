@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { getDashboardStats } from '../api/statsService';
+import Modal from '../components/common/Modal';
 import StatCard from '../components/common/StatCard';
-import WorkloadList from '../components/dashboard/WorkloadList';
 import LatestTicketsTable from '../components/dashboard/LatestTicketsTable';
+import WorkloadList from '../components/dashboard/WorkloadList';
+import NouveauTicketForm from '../components/tickets/NouveauTicketForm';
 import { formatDuree } from '../utils/format';
 import type { DashboardStats } from '../types/stats';
 
@@ -11,6 +12,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [erreur, setErreur] = useState<string | null>(null);
+  const [modalOuvert, setModalOuvert] = useState<boolean>(false);
+  const [rechargement, setRechargement] = useState<number>(0);
 
   useEffect(() => {
     const charger = async () => {
@@ -25,7 +28,12 @@ export default function DashboardPage() {
     };
 
     charger();
-  }, []);
+  }, [rechargement]);
+
+  const apresCreation = () => {
+    setModalOuvert(false);
+    setRechargement((n) => n + 1);
+  };
 
   return (
     <div>
@@ -34,12 +42,12 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
           <p className="mt-1 text-sm text-slate-500">Vue d'ensemble de l'activité du support</p>
         </div>
-        <Link
-          to="/nouveau-ticket"
+        <button
+          onClick={() => setModalOuvert(true)}
           className="rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-800"
         >
           Nouveau ticket
-        </Link>
+        </button>
       </div>
 
       {loading && <p className="mt-8 text-slate-500">Chargement...</p>}
@@ -76,6 +84,12 @@ export default function DashboardPage() {
             </div>
           </div>
         </>
+      )}
+
+      {modalOuvert && (
+        <Modal titre="Nouveau ticket" largeur="lg" onFermer={() => setModalOuvert(false)}>
+          <NouveauTicketForm onSucces={apresCreation} onAnnuler={() => setModalOuvert(false)} />
+        </Modal>
       )}
     </div>
   );

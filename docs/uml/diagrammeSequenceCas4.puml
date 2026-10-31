@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU4 - Centraliser les tickets
-
 actor "Technicien" as T
 participant ":Système Helpdesk" as S
 

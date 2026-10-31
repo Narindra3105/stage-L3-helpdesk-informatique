@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU8 - Configurer les SLA et les priorités
-
 actor "Administrateur" as A
 participant ":Système Helpdesk" as S
 

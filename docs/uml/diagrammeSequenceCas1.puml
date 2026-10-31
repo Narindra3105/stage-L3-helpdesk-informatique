@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU1 - S'authentifier
-
 actor "Utilisateur" as U
 participant ":Système Helpdesk" as S
 

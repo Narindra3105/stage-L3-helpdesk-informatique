@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU6 - Traiter et résoudre un ticket
-
 actor "Technicien" as T
 participant ":Système Helpdesk" as S
 

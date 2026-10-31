@@ -21,8 +21,6 @@ skinparam sequence {
 }
 hide footbox
 
-title DSS : CU2 - Demander une assistance
-
 actor "Demandeur" as D
 participant ":Système Helpdesk" as S
 

@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { isAxiosError } from 'axios';
 import { changerStatut, getTickets } from '../api/ticketService';
 import { getPriorites, getStatuts } from '../api/referentielService';
-import { useAuth } from '../hooks/useAuth';
+import Modal from '../components/common/Modal';
+import NouveauTicketForm from '../components/tickets/NouveauTicketForm';
 import TicketBoard from '../components/tickets/TicketBoard';
+import TicketFilters from '../components/tickets/TicketFilters';
+import { useAuth } from '../hooks/useAuth';
+import { messageErreur } from '../utils/erreurs';
+import { peutChangerStatut } from '../utils/permissions';
 import type { Priorite, Statut } from '../types/referentiel';
 import type { Ticket } from '../types/ticket';
-import TicketFilters from '../components/tickets/TicketFilters';
-import { peutChangerStatut } from '../utils/permissions';
+import { useNavigate } from 'react-router-dom';
 
 export default function TicketsPage() {
   const { user } = useAuth();
@@ -19,10 +21,13 @@ export default function TicketsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [erreur, setErreur] = useState<string | null>(null);
   const [erreurDeplacement, setErreurDeplacement] = useState<string | null>(null);
+  const [modalOuvert, setModalOuvert] = useState<boolean>(false);
 
   const [recherche, setRecherche] = useState<string>('');
   const [prioriteFiltre, setPrioriteFiltre] = useState<string>('');
   const [technicienFiltre, setTechnicienFiltre] = useState<string>('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const charger = async () => {
@@ -106,9 +111,13 @@ export default function TicketsPage() {
       setTickets((prev) => prev.map((t) => (t.id === misAJour.id ? misAJour : t)));
     } catch (e) {
       setTickets((prev) => prev.map((t) => (t.id === ticketId ? ticket : t)));
-      const message = isAxiosError(e) ? e.response?.data?.message : undefined;
-      setErreurDeplacement(message ?? 'Impossible de modifier le statut du ticket.');
+      setErreurDeplacement(messageErreur(e, 'Impossible de modifier le statut du ticket.'));
     }
+  };
+
+  const apresCreation = (ticket: Ticket) => {
+     setModalOuvert(false);
+     navigate(`/tickets/${ticket.id}`);
   };
 
   return (
@@ -120,12 +129,12 @@ export default function TicketsPage() {
             Glissez les cartes d'une colonne à l'autre pour changer le statut
           </p>
         </div>
-        <Link
-          to="/nouveau-ticket"
+        <button
+          onClick={() => setModalOuvert(true)}
           className="rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-800"
         >
           Nouveau ticket
-        </Link>
+        </button>
       </div>
 
       {loading && <p className="mt-8 text-slate-500">Chargement...</p>}
@@ -164,6 +173,12 @@ export default function TicketsPage() {
             />
           </div>
         </>
+      )}
+
+      {modalOuvert && (
+        <Modal titre="Nouveau ticket" largeur="lg" onFermer={() => setModalOuvert(false)}>
+          <NouveauTicketForm onSucces={apresCreation} onAnnuler={() => setModalOuvert(false)} />
+        </Modal>
       )}
     </div>
   );
