@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { assignerTicket, changerStatut, getTicket } from '../api/ticketService';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { assignerTicket, changerStatut, getTicket, prendreTicket } from '../api/ticketService';
 import { getStatuts } from '../api/referentielService';
 import { getUtilisateurs } from '../api/utilisateurService';
 import { useAuth } from '../hooks/useAuth';
 import Badge from '../components/common/Badge';
 import PriorityBadge from '../components/tickets/PriorityBadge';
 import SlaCard from '../components/tickets/SlaCard';
+import TicketActionsTechnicien from '../components/tickets/TicketActionsTechnicien';
+import TicketComments from '../components/tickets/TicketComments';
 import TicketInfo from '../components/tickets/TicketInfo';
+import { retourListeTickets } from '../config/navigation';
 import { couleurStatut } from '../utils/badges';
 import { messageErreur } from '../utils/erreurs';
-import { peutChangerStatut } from '../utils/permissions';
+import { nomComplet } from '../utils/format';
 import type { Statut } from '../types/referentiel';
 import type { Ticket } from '../types/ticket';
 import type { Utilisateur } from '../types/user';
-import TicketComments from '../components/tickets/TicketComments';
-import { retourListeTickets } from '../config/navigation';
 
 const classeSelect =
   'mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 disabled:opacity-60';
@@ -26,8 +27,10 @@ export default function TicketDetailPage() {
   const ticketId = Number(id);
   const idValide = Number.isInteger(ticketId) && ticketId >= 1;
 
+  const navigate = useNavigate();
   const { user } = useAuth();
   const estAdmin = user?.role === 'admin';
+  const estTechnicien = user?.role === 'technicien';
 
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [statuts, setStatuts] = useState<Statut[]>([]);
@@ -97,16 +100,21 @@ export default function TicketDetailPage() {
     appliquer(() => assignerTicket(ticket.id, technicienId));
   };
 
-  if (!idValide) {
-    return <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">Ticket invalide.</p>;
-  }
-
   const retour = user ? retourListeTickets[user.role] : retourListeTickets.admin;
   const lienRetour = (
     <Link to={retour.to} className="text-sm font-medium text-blue-700 hover:underline">
       ← {retour.label}
     </Link>
   );
+
+  if (!idValide) {
+    return (
+      <div>
+        {lienRetour}
+        <p className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">Ticket invalide.</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return <p className="text-slate-500">Chargement...</p>;
@@ -123,7 +131,6 @@ export default function TicketDetailPage() {
     );
   }
 
-  const peutModifierStatut = peutChangerStatut(user, ticket);
   const statutResolu = statuts.find((s) => s.nom.toLowerCase() === 'résolu');
   const techniciensActifs = utilisateurs.filter(
     (u) => u.role === 'technicien' && u.statut === 'actif'
@@ -136,7 +143,13 @@ export default function TicketDetailPage() {
     <div>
       {lienRetour}
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      {estTechnicien && (
+        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Traitement du ticket
+        </p>
+      )}
+
+      <div className={`${estTechnicien ? 'mt-1' : 'mt-4'} flex flex-wrap items-center gap-3`}>
         <h1 className="text-2xl font-bold text-slate-900">
           {ticket.numero} · {ticket.sujet}
         </h1>
@@ -144,6 +157,7 @@ export default function TicketDetailPage() {
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <PriorityBadge nom={ticket.priorite_nom} couleur={ticket.priorite_couleur} />
         <Badge couleur={couleurStatut(ticket.statut_nom)}>{ticket.statut_nom}</Badge>
+        {ticket.categorie_nom && <Badge couleur="gris">{ticket.categorie_nom}</Badge>}
       </div>
 
       {erreurAction && (
@@ -158,66 +172,71 @@ export default function TicketDetailPage() {
               {ticket.description ?? 'Aucune description.'}
             </p>
           </div>
-          <TicketComments ticket={ticket} />
+
+          <TicketComments ticket={ticket} variante={estTechnicien ? 'echanges' : 'historique'} />
         </div>
 
         <div className="space-y-6">
-          <TicketInfo ticket={ticket} />
-          <SlaCard ticket={ticket} />
+          {estTechnicien && (
+            <TicketActionsTechnicien
+              ticket={ticket}
+              statuts={statuts}
+              enCours={enCours}
+              onStatut={(statutId) => appliquer(() => changerStatut(ticket.id, statutId))}
+              onPrendre={() => appliquer(() => prendreTicket(ticket.id))}
+              onTransfert={() => navigate('/mes-tickets')}
+            />
+          )}
 
-          {(peutModifierStatut || estAdmin) && (
+          {estAdmin && (
             <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-5">
               <h2 className="text-base font-semibold text-slate-900">Actions</h2>
 
-              {peutModifierStatut && (
-                <div>
-                  <label htmlFor="statut" className="block text-sm font-medium text-slate-700">
-                    Statut
-                  </label>
-                  <select
-                    id="statut"
-                    value={ticket.statut_id}
-                    onChange={surChangementStatut}
-                    disabled={enCours}
-                    className={classeSelect}
-                  >
-                    {statuts.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.nom}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div>
+                <label htmlFor="statut" className="block text-sm font-medium text-slate-700">
+                  Statut
+                </label>
+                <select
+                  id="statut"
+                  value={ticket.statut_id}
+                  onChange={surChangementStatut}
+                  disabled={enCours}
+                  className={classeSelect}
+                >
+                  {statuts.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.nom}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              {estAdmin && (
-                <div>
-                  <label htmlFor="technicien" className="block text-sm font-medium text-slate-700">
-                    Technicien
-                  </label>
-                  <select
-                    id="technicien"
-                    value={ticket.technicien_id ?? ''}
-                    onChange={surChangementTechnicien}
-                    disabled={enCours || Boolean(ticket.est_final)}
-                    className={classeSelect}
-                  >
-                    <option value="">Non assigné</option>
-                    {technicienCourantAbsent && ticket.technicien_id !== null && (
-                      <option value={ticket.technicien_id}>
-                        {ticket.technicien_nom} (indisponible)
-                      </option>
-                    )}
-                    {techniciensActifs.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {[t.prenom, t.nom].filter(Boolean).join(' ')}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div>
+                <label htmlFor="technicien" className="block text-sm font-medium text-slate-700">
+                  Technicien
+                </label>
+                <select
+                  id="technicien"
+                  value={ticket.technicien_id ?? ''}
+                  onChange={surChangementTechnicien}
+                  disabled={enCours || Boolean(ticket.est_final)}
+                  className={classeSelect}
+                >
+                  <option value="">Non assigné</option>
+                  {technicienCourantAbsent && ticket.technicien_id !== null && (
+                    <option value={ticket.technicien_id}>
+                      {ticket.technicien_nom} (indisponible)
+                    </option>
+                  )}
+                  {techniciensActifs.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {nomComplet(t.prenom, t.nom)}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              {peutModifierStatut && statutResolu && !ticket.est_final && (
+              {statutResolu && !ticket.est_final && (
                 <button
                   onClick={() => appliquer(() => changerStatut(ticket.id, statutResolu.id))}
                   disabled={enCours}
@@ -228,6 +247,9 @@ export default function TicketDetailPage() {
               )}
             </div>
           )}
+
+          <TicketInfo ticket={ticket} />
+          <SlaCard ticket={ticket} />
         </div>
       </div>
     </div>
