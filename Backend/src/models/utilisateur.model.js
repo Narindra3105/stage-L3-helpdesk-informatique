@@ -69,6 +69,22 @@ const findTechniciensActifs = async () => {
   return rows;
 };
 
+const findMdpHash = async (id) => {
+  const [rows] = await pool.query('SELECT mdp FROM utilisateur WHERE id = ?', [id]);
+  return rows[0] ? rows[0].mdp : null;
+};
+
+const updateProfil = async (id, { nom, prenom, email }) => {
+  await pool.query(
+    'UPDATE utilisateur SET nom = ?, prenom = ?, email = ? WHERE id = ?',
+    [nom, prenom, email, id]
+  );
+};
+
+const updateStatut = async (id, statut) => {
+  await pool.query('UPDATE utilisateur SET statut = ? WHERE id = ?', [statut, id]);
+};
+
 module.exports = {
   findAll,
   findByEmail,
@@ -78,5 +94,8 @@ module.exports = {
   findTechniciensActifs,
   update,
   updateDerniereActivite,
+  findMdpHash,
+  updateProfil,
+  updateStatut,
   remove,
 };
