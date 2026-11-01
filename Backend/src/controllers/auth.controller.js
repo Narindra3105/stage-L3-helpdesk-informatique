@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
 
   const utilisateur = await utilisateurModel.create({
     nom,
-    prenom,
+    prenom: prenom || null,
     email,
     mdp: mdpHash,
   });
@@ -57,4 +57,13 @@ exports.login = async (req, res) => {
       statut: utilisateur.statut,
     },
   });
+};
+
+exports.me = async (req, res) => {
+  const utilisateur = await utilisateurModel.findById(req.user.id);
+  if (!utilisateur) {
+    throw new AppError('Utilisateur introuvable', 404);
+  }
+
+  res.status(200).json({ utilisateur });
 };
