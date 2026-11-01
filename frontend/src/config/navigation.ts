@@ -21,6 +21,7 @@ export const menusParRole: Record<Role, LienMenu[]> = {
     { to: '/mes-tickets', label: 'Mes tickets' },
     { to: '/file-attente', label: "File d'attente" },
     { to: '/base-connaissances', label: 'Base de connaissances' },
+    { to: '/mon-activite', label: 'Mon activité' },
   ],
   demandeur: [
     { to: '/', label: 'Accueil', end: true },

@@ -6,6 +6,7 @@ import HomePage from '../pages/HomePage';
 import TicketsPage from '../pages/TicketsPage';
 import MesTicketsPage from '../pages/MesTicketsPage';
 import FileAttentePage from '../pages/FileAttentePage';
+import ActivitePage from '../pages/ActivitePage';
 import TicketDetailPage from '../pages/TicketDetailPage';
 import ArticlesPage from '../pages/ArticlesPage';
 import ArticleDetailPage from '../pages/ArticleDetailPage';
@@ -30,6 +31,7 @@ export default function AppRouter() {
             <Route element={<ProtectedRoute roles={['technicien']} />}>
               <Route path="/mes-tickets" element={<MesTicketsPage />} />
               <Route path="/file-attente" element={<FileAttentePage />} />
+              <Route path="/mon-activite" element={<ActivitePage />} />
             </Route>
             <Route element={<ProtectedRoute roles={['admin', 'technicien']} />}>
               <Route path="/base-connaissances/nouveau" element={<ArticleEditorPage />} />
