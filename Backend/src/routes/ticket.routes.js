@@ -8,6 +8,7 @@ const {
   creerTicketRules,
   modifierTicketRules,
   assignationRules,
+  transfertRules,
   changementStatutRules,
 } = require('../validators/ticket.validator');
 const ticketController = require('../controllers/ticket.controller');
