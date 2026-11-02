@@ -15,6 +15,7 @@ export const menusParRole: Record<Role, LienMenu[]> = {
     { to: '/utilisateurs', label: 'Utilisateurs' },
     { to: '/rapports-sla', label: 'Rapports SLA' },
     { to: '/parametres', label: 'Paramètres' },
+    { to: '/profil', label: 'Mon profil' },
   ],
   technicien: [
     { to: '/', label: 'Tableau de bord', end: true },
@@ -22,11 +23,13 @@ export const menusParRole: Record<Role, LienMenu[]> = {
     { to: '/file-attente', label: "File d'attente" },
     { to: '/base-connaissances', label: 'Base de connaissances' },
     { to: '/mon-activite', label: 'Mon activité' },
+    { to: '/profil', label: 'Mon profil' },
   ],
   demandeur: [
     { to: '/', label: 'Accueil', end: true },
     { to: '/tickets', label: 'Mes tickets' },
     { to: '/base-connaissances', label: 'Aide' },
+    { to: '/profil', label: 'Mon profil' },
   ],
 };
 

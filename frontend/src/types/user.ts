@@ -2,6 +2,8 @@ export type Role = 'admin' | 'technicien' | 'demandeur';
 
 export type StatutUtilisateur = 'actif' | 'absent' | 'inactif';
 
+export type StatutDisponibilite = 'actif' | 'absent';
+
 export interface Utilisateur {
   id: number;
   nom: string;
@@ -25,4 +27,15 @@ export interface UtilisateurPayload {
 
 export interface NouvelUtilisateurPayload extends UtilisateurPayload {
   mdp: string;
+}
+
+export interface ProfilPayload {
+  nom: string;
+  prenom: string | null;
+  email: string;
+}
+
+export interface ChangementMdpPayload {
+  mdp_actuel: string;
+  nouveau_mdp: string;
 }

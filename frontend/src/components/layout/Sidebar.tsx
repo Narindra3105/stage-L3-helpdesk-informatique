@@ -4,6 +4,7 @@ import { menusParRole } from '../../config/navigation';
 import { useAuth } from '../../hooks/useAuth';
 import { initiales, nomComplet } from '../../utils/format';
 import { libellesRole } from '../../utils/roles';
+import { libellesDisponibilite, pointsStatut } from '../../utils/utilisateurs';
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
@@ -46,7 +47,14 @@ export default function Sidebar() {
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-slate-900">{nomUtilisateur}</p>
-          <p className="text-xs text-slate-500">{user ? libellesRole[user.role] : ''}</p>
+          {user && user.role === 'technicien' ? (
+            <p className="flex items-center gap-1.5 text-xs text-slate-500">
+              <span className={`h-2 w-2 rounded-full ${pointsStatut[user.statut]}`} />
+              {libellesDisponibilite[user.statut]}
+            </p>
+          ) : (
+            <p className="text-xs text-slate-500">{user ? libellesRole[user.role] : ''}</p>
+          )}
         </div>
         <button
           onClick={logout}

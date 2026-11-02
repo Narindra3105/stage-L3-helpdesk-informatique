@@ -2,12 +2,12 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './protectedRoute';
 import Layout from '../components/layout/Layout';
 import LoginPage from '../pages/LoginPage';
-import RegisterPage from '../pages/RegisterPage';
 import HomePage from '../pages/HomePage';
 import TicketsPage from '../pages/TicketsPage';
 import MesTicketsPage from '../pages/MesTicketsPage';
 import FileAttentePage from '../pages/FileAttentePage';
 import ActivitePage from '../pages/ActivitePage';
+import ProfilPage from '../pages/ProfilPage';
 import TicketDetailPage from '../pages/TicketDetailPage';
 import ArticlesPage from '../pages/ArticlesPage';
 import ArticleDetailPage from '../pages/ArticleDetailPage';
@@ -22,7 +22,6 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
@@ -30,6 +29,7 @@ export default function AppRouter() {
             <Route path="/tickets/:id" element={<TicketDetailPage />} />
             <Route path="/base-connaissances" element={<ArticlesPage />} />
             <Route path="/base-connaissances/:id" element={<ArticleDetailPage />} />
+            <Route path="/profil" element={<ProfilPage />} />
             <Route element={<ProtectedRoute roles={['technicien']} />}>
               <Route path="/mes-tickets" element={<MesTicketsPage />} />
               <Route path="/file-attente" element={<FileAttentePage />} />

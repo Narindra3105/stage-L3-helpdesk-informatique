@@ -19,3 +19,15 @@ export const infosStatutUtilisateur: Record<
   absent: { libelle: 'Absent', couleur: 'orange' },
   inactif: { libelle: 'Inactif', couleur: 'gris' },
 };
+
+export const libellesDisponibilite: Record<StatutUtilisateur, string> = {
+  actif: 'Disponible',
+  absent: 'Absent',
+  inactif: 'Inactif',
+};
+
+export const pointsStatut: Record<StatutUtilisateur, string> = {
+  actif: 'bg-green-600',
+  absent: 'bg-amber-500',
+  inactif: 'bg-slate-400',
+};

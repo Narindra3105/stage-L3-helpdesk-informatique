@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
-import { getMe, login as loginRequest } from '../api/authService';
+import { login as loginRequest } from '../api/authService';
+import { getProfil } from '../api/profilService';
 import type { LoginPayload } from '../types/auth';
 import type { Utilisateur } from '../types/user';
 
@@ -21,7 +22,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const restaurerSession = async () => {
       try {
-        const utilisateur = await getMe();
+        const utilisateur = await getProfil();
         setUser(utilisateur);
       } catch {
         localStorage.removeItem('token');
@@ -48,8 +49,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  const mettreAJourUtilisateur = (utilisateur: Utilisateur) => {
+    setUser(utilisateur);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, mettreAJourUtilisateur }}>
       {children}
     </AuthContext.Provider>
   );
